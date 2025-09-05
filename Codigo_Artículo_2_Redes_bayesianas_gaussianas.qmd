@@ -1,0 +1,156 @@
+---
+title: "Codigo - Artículo 2: Redes bayesianas gaussianas"
+author: "A01247217-Pedro Silva"
+format:
+   html:
+     toc: true
+     html-math-method: katex
+     embed-resources: true
+     self-contained-math: true
+     df-print: kable
+editor: source
+---
+
+# carga de todas las bases y filtrado para obtener la base de datos que va aser usada \
+
+
+```{r}
+ install.packages("janitor")
+ install.packages("skimr")
+```
+
+```{r}
+library(readr)
+library(dplyr)
+library(readr)
+library(skimr)
+```
+
+```{r}
+muestras <- read_delim("data/ensanut2022_muestras.csv", delim = ";") %>%
+  select(FOLIO_I, FOLIO_INT, h0302, h0303, entidad, 
+         valor_PCR, valor_COLEST, valor_COL_LDL, valor_COL_HDL,
+         valor_TRIG, valor_GLU_SUERO, valor_HB1AC, valor_CREAT)
+```
+
+```{r}
+socdem <- read_delim("data/ensanut2022_socdem.csv", delim = ";") %>%
+  select(FOLIO_I, FOLIO_INT, estrato)
+```
+
+```{r}
+calidad_aire <- read_csv("data/calidad_aire_2025.csv") %>%
+  filter(Tipo_de_Fuente == "Fuentes fijas") %>%
+  select(Entidad_federativa, SO_2, CO, NOx, PM_010, PM_2_5)
+```
+
+```{r}
+ensanut_completo <- left_join(muestras, socdem, by = c("FOLIO_I", "FOLIO_INT"))
+
+```
+```{r}
+mapeo_entidades <- data.frame(
+  entidad = 1:32,
+  entidad_nombre = c("Aguascalientes", "Baja California", "Baja California Sur", "Campeche",
+                     "Coahuila de Zaragoza", "Colima", "Chiapas", "Chihuahua", "Ciudad de México",
+                     "Durango", "Guanajuato", "Guerrero", "Hidalgo", "Jalisco", "México",
+                     "Michoacán de Ocampo", "Morelos", "Nayarit", "Nuevo León", "Oaxaca",
+                     "Puebla", "Querétaro", "Quintana Roo", "San Luis Potosí", "Sinaloa",
+                     "Sonora", "Tabasco", "Tamaulipas", "Tlaxcala",
+                     "Veracruz de Ignacio de la Llave", "Yucatán", "Zacatecas")
+)
+```
+
+```{r}
+ensanut_completo <- left_join(muestras, socdem, by = c("FOLIO_I", "FOLIO_INT"))
+
+```
+
+```{r}
+ensanut_completo <- ensanut_completo %>%
+  mutate(entidad = as.integer(entidad))
+```
+
+```{r}
+ensanut_completo <- ensanut_completo %>%
+  left_join(mapeo_entidades, by = "entidad")
+```
+
+```{r}
+base_final <- left_join(ensanut_completo, calidad_aire, by = c("entidad_nombre" = "Entidad_federativa"))
+```
+
+```{r}
+head(base_final)
+```
+
+
+# exploracion
+
+```{r}
+# 1. Ver dimensiones de la base
+cat("Dimensiones de la base final:\n")
+dim(base_final)
+```
+
+```{r}
+
+# 2. Ver nombres de columnas
+cat("\nNombres de columnas:\n")
+names(base_final)
+```
+
+```{r}
+# 3. Ver estructura de las variables
+cat("\nEstructura de la base:\n")
+str(base_final)
+```
+
+```{r}
+# 4. Resumen estadístico de todas las variables
+cat("\nResumen estadístico:\n")
+summary(base_final)
+
+```
+```{r}
+# 5. Contar NAs por columna
+cat("\nNúmero de NAs por columna:\n")
+na_count <- sapply(base_final, function(x) sum(is.na(x)))
+print(na_count)
+```
+
+```{r}
+# 6. Porcentaje de NAs por columna
+cat("\nPorcentaje de NAs por columna:\n")
+na_percent <- sapply(base_final, function(x) round(mean(is.na(x)) * 100, 2))
+print(na_percent)
+```
+
+```{r}
+# 7. Verificar unique values para variables categóricas clave
+cat("\nValores únicos en entidad:\n")
+unique(base_final$entidad)
+
+cat("\nValores únicos en estrato:\n")
+unique(base_final$estrato)
+```
+
+```{r}
+# 8. Usar skimr para un análisis más detallado
+cat("\nAnálisis detallado con skimr:\n")
+skim(base_final)
+```
+```{r}
+# 9. Verificar la unión con calidad del aire
+cat("\nNúmero de registros con datos de contaminantes:\n")
+sum(!is.na(base_final$PM_2_5))
+```
+
+```{r}
+# 10. Ver correlación entre variables numéricas (opcional)
+cat("\nMatriz de correlación (solo variables numéricas):\n")
+numeric_data <- base_final %>% select(where(is.numeric))
+cor_matrix <- cor(numeric_data, use = "complete.obs")
+print(round(cor_matrix, 2))
+```
+
