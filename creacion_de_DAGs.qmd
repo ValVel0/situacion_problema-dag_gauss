@@ -1,0 +1,208 @@
+---
+title: "imagenes de DAGs"
+format: html
+editor: visual
+---
+
+# Primera DAG 
+
+La primera DAG se construyó con una entrevista a la Dra. Mariana Sofía Flores Jiménez.
+
+```{r}
+library(tidyverse)
+library(bnlearn)
+```
+
+```{r}
+dag_salud1 = empty.graph(nodes = c("sexo", "edad", "entidad", 
+                                 "valor_PCR", "valor_COLEST", "valor_COL_LDL", "valor_COL_HDL", 
+                                 "valor_TRIG", "valor_GLU_SUERO", "valor_HBAC", "hb02", "valor_CREAT",
+                                 "SO2", "CO", "NOx", "PM_010", "PM_2_5", "COV", "NH3"))
+
+arc_set1 = matrix(c(
+  #demográficos con biomarcadores
+  "sexo", "valor_COLEST",
+  "sexo", "valor_COL_LDL",
+  "sexo", "valor_COL_HDL",
+  "sexo", "valor_TRIG",
+  "sexo", "valor_GLU_SUERO",
+  "sexo", "valor_CREAT",
+  
+  "edad", "valor_COLEST",
+  "edad", "valor_COL_LDL",
+  "edad", "valor_COL_HDL",
+  "edad", "valor_TRIG",
+  "edad", "valor_GLU_SUERO",
+  "edad", "valor_CREAT",
+  
+  "entidad", "valor_COLEST",
+  "entidad", "valor_TRIG",
+  "entidad", "valor_GLU_SUERO",
+  "entidad", "valor_COL_LDL",
+  "entidad", "valor_COL_HDL",
+  
+  # interacciones biomarcadores
+  "valor_GLU_SUERO", "valor_HBAC",
+  "valor_TRIG", "valor_COL_HDL",
+  #"valor_COLEST", "valor_COL_LDL",
+  
+  # contaminantes individuales con biomarcadores
+  "SO2", "valor_TRIG",
+  "SO2", "valor_COLEST",
+  "CO", "valor_GLU_SUERO",
+  "CO", "hb02",
+  "CO", "valor_COLEST",
+  "PM_010", "hb02",
+  "PM_010", "valor_GLU_SUERO",
+  "PM_010", "valor_HBAC",
+  "PM_2_5", "hb02",
+  "PM_2_5", "valor_GLU_SUERO",
+  "PM_2_5", "valor_HBAC",
+  "COV", "valor_COLEST",
+  "COV", "valor_TRIG",
+  "COV", "valor_GLU_SUERO",
+  "NH3", "valor_COLEST",
+  "NH3", "valor_TRIG",
+  "NH3", "valor_GLU_SUERO",
+  
+  # contaminantes combinados --> inflamación
+  # Aunque la pregunta 14 no fue respondida, de la pregunta 19, se puede deducir que un biomarcador de estrés oxidativo indirecto es la proteína C
+  
+  "SO2", "valor_PCR",
+  "CO", "valor_PCR",
+  "NOx", "valor_PCR",
+  "PM_010", "valor_PCR",
+  "PM_2_5", "valor_PCR",
+  "COV", "valor_PCR",
+  "NH3", "valor_PCR"
+
+  
+), byrow = TRUE, ncol = 2,
+dimnames = list(NULL, c("from", "to")))
+
+# arcos de DAG
+arcs(dag_salud1) = arc_set1
+
+dag_salud1
+```
+
+```{r}
+dev.new(width=12, height=8)  
+graphviz.plot(dag_salud1, shape = "ellipse")
+```
+
+```{r}
+# guardamos la imagen
+png("figures/diagrama_dag_salud1.png", width = 1200, height = 800, res = 150)
+graphviz.plot(dag_salud1, shape = "ellipse")
+dev.off()
+```
+
+# Segunda DAG
+
+La segunda DAG se contruyó con las respuestas de la entrevista al Rafael Alberto Pérez San Lázaro
+
+```{r}
+
+# en esta entrevista, la entidad federativa no tiene ninguna relación
+dag_salud2 = empty.graph(nodes = c("sexo", "edad", "entidad", 
+                                 "valor_PCR", "valor_COLEST", "valor_COL_LDL", "valor_COL_HDL", 
+                                 "valor_TRIG", "valor_GLU_SUERO", "valor_HBAC", "hb02", "valor_CREAT",
+                                 "SO2", "CO", "NOx", "PM_010", "PM_2_5", "COV", "NH3"))
+
+arc_set2 <- matrix(c(
+  
+  #demográficos con biomarcadores
+  "sexo", "valor_COLEST",
+  "sexo", "valor_COL_LDL",
+  "sexo", "valor_COL_HDL",
+  "sexo", "valor_TRIG",
+  "sexo", "valor_GLU_SUERO",
+  "sexo", "valor_CREAT",
+  
+  "edad", "valor_COLEST",
+  "edad", "valor_COL_LDL",
+  "edad", "valor_COL_HDL",
+  "edad", "valor_TRIG",
+  "edad", "valor_GLU_SUERO",
+  "edad", "valor_CREAT",
+  
+  # interacciones biomarcadores
+  "valor_GLU_SUERO", "valor_HBAC",
+  "valor_COLEST", "valor_COL_LDL",
+  "valor_TRIG", "valor_COL_HDL",
+  "valor_TRIG", "valor_COL_LDL",
+  
+  "sexo", "valor_CREAT",
+  "edad", "valor_CREAT",
+  "hb02", "valor_CREAT",
+  
+  # contaminantes --> biomarcadores
+  "SO2", "valor_TRIG",
+  "SO2", "valor_COLEST",
+  "CO", "valor_GLU_SUERO",
+  "CO", "hb02",
+  "CO", "valor_COLEST",
+  "NOx", "valor_PCR",
+  "PM_010", "hb02",
+  "PM_010", "valor_GLU_SUERO",
+  "PM_010", "valor_HBAC",
+  "PM_2_5", "hb02",
+  "PM_2_5", "valor_GLU_SUERO",
+  "PM_2_5", "valor_HBAC",
+  "COV", "valor_COLEST",
+  "COV", "valor_TRIG",
+  "COV", "valor_GLU_SUERO",
+  "NH3", "valor_COLEST",
+  "NH3", "valor_TRIG",
+  "NH3", "valor_GLU_SUERO",
+  
+  # biomarcadores + contaminantes --> PCR
+  #"edad", "valor_COL_LDL",
+  #"edad", "valor_TRIG",
+  "SO2", "valor_PCR",
+  "CO", "valor_PCR",
+  "NOx", "valor_PCR",
+  "PM_010", "valor_PCR",
+  "PM_2_5", "valor_PCR",
+  "COV", "valor_PCR",
+  "NH3", "valor_PCR",
+  "valor_PCR", "valor_TRIG",
+  "valor_PCR", "valor_GLU_SUERO",
+  "valor_PCR", "valor_HBAC",
+  "valor_PCR", "valor_COL_HDL"
+  
+  
+), byrow = TRUE, ncol = 2,
+dimnames = list(NULL, c("from", "to")))
+
+# arcos de DAG
+arcs(dag_salud2) = arc_set2
+
+dag_salud2
+
+```
+
+```{r}
+dev.new(width=12, height=8)  
+graphviz.plot(dag_salud2, shape = "ellipse")
+```
+
+```{r}
+# guardamos la imagen
+png("figures/diagrama_dag_salud2.png", width = 1200, height = 800, res = 150)
+graphviz.plot(dag_salud2, shape = "ellipse")
+dev.off()
+```
+
+
+# Tercera DAG
+
+
+
+
+
+
+
+
+
