@@ -24,133 +24,97 @@ library(readr)
 library(dplyr)
 library(readr)
 library(skimr)
+library(janitor)
+library(tidyr)
+library(tidyverse)
+```
+
+# Carga y limpia de Muestras
+
+```{r}
+muestras = read_delim("data/ensanut2022_muestras.csv", delim = ";")
+head(muestras)
 ```
 
 ```{r}
-muestras <- read_delim("data/ensanut2022_muestras.csv", delim = ";") %>%
-  select(FOLIO_I, FOLIO_INT, h0302, h0303, entidad, 
-         valor_PCR, valor_COLEST, valor_COL_LDL, valor_COL_HDL,
-         valor_TRIG, valor_GLU_SUERO, valor_HB1AC, valor_CREAT)
+glimpse(muestras)
 ```
 
 ```{r}
-socdem <- read_delim("data/ensanut2022_socdem.csv", delim = ";") %>%
-  select(FOLIO_I, FOLIO_INT, estrato)
+muestras = muestras |>
+            clean_names()
 ```
 
 ```{r}
-calidad_aire <- read_csv("data/calidad_aire_2025.csv") %>%
-  filter(Tipo_de_Fuente == "Fuentes fijas") %>%
-  select(Entidad_federativa, SO_2, CO, NOx, PM_010, PM_2_5)
+summary(muestras)
+```
+```{r}
+muestras = muestras |>
+        mutate(sexo = case_when(h0302 == 1 ~ "hombre",h0302 == 2 ~ "mujer"))
 ```
 
 ```{r}
-ensanut_completo <- left_join(muestras, socdem, by = c("FOLIO_I", "FOLIO_INT"))
-
+muestras <- muestras %>% rename(edad = h0303)
 ```
+
+
 ```{r}
-mapeo_entidades <- data.frame(
-  entidad = 1:32,
-  entidad_nombre = c("Aguascalientes", "Baja California", "Baja California Sur", "Campeche",
-                     "Coahuila de Zaragoza", "Colima", "Chiapas", "Chihuahua", "Ciudad de México",
-                     "Durango", "Guanajuato", "Guerrero", "Hidalgo", "Jalisco", "México",
-                     "Michoacán de Ocampo", "Morelos", "Nayarit", "Nuevo León", "Oaxaca",
-                     "Puebla", "Querétaro", "Quintana Roo", "San Luis Potosí", "Sinaloa",
-                     "Sonora", "Tabasco", "Tamaulipas", "Tlaxcala",
-                     "Veracruz de Ignacio de la Llave", "Yucatán", "Zacatecas")
-)
+muestras = muestras |>
+        select(sexo, edad, entidad, desc_mun, estrato, valor_pcr, valor_colest, valor_col_ldl, valor_col_hdl, valor_trig, valor_glu_suero, valor_hb1ac, hb02, valor_creat)
 ```
 
 ```{r}
-ensanut_completo <- left_join(muestras, socdem, by = c("FOLIO_I", "FOLIO_INT"))
-
+head(muestras)
 ```
 
 ```{r}
-ensanut_completo <- ensanut_completo %>%
-  mutate(entidad = as.integer(entidad))
+glimpse(muestras)
 ```
 
 ```{r}
-ensanut_completo <- ensanut_completo %>%
-  left_join(mapeo_entidades, by = "entidad")
+muestras = muestras |>
+        mutate(across(contains("valor"), ~ as.numeric(str_replace(., ",", "\\."))))
+
+muestras = muestras |>
+        mutate(across(hb02, ~ as.numeric(str_replace(., ",", "\\."))))
 ```
 
 ```{r}
-base_final <- left_join(ensanut_completo, calidad_aire, by = c("entidad_nombre" = "Entidad_federativa"))
+muestras_limp <- muestras |>
+  filter(if_all(c(hb02, valor_pcr, valor_colest, valor_col_ldl, valor_col_hdl, 
+                  valor_trig, valor_glu_suero, valor_hb1ac, valor_creat), 
+                ~ !is.na(.)))
 ```
 
 ```{r}
-head(base_final)
+glimpse(muestras_limp)
 ```
 
+#Carga y limpia de calidad_aire
 
-# exploracion
-
-```{r}
-# 1. Ver dimensiones de la base
-cat("Dimensiones de la base final:\n")
-dim(base_final)
-```
 
 ```{r}
-
-# 2. Ver nombres de columnas
-cat("\nNombres de columnas:\n")
-names(base_final)
+aire = read_csv("data/calidad_aire_2025.csv")
+head(aire)
 ```
 
 ```{r}
-# 3. Ver estructura de las variables
-cat("\nEstructura de la base:\n")
-str(base_final)
+aire = aire |>
+            clean_names()
 ```
 
 ```{r}
-# 4. Resumen estadístico de todas las variables
-cat("\nResumen estadístico:\n")
-summary(base_final)
-
-```
-```{r}
-# 5. Contar NAs por columna
-cat("\nNúmero de NAs por columna:\n")
-na_count <- sapply(base_final, function(x) sum(is.na(x)))
-print(na_count)
+aire = aire |>
+        select(municipio,tipo_de_fuente,so_2,co,n_ox,cov,pm_010,pm_2_5,nh_3,entidad)
 ```
 
 ```{r}
-# 6. Porcentaje de NAs por columna
-cat("\nPorcentaje de NAs por columna:\n")
-na_percent <- sapply(base_final, function(x) round(mean(is.na(x)) * 100, 2))
-print(na_percent)
+head(aire)
 ```
 
 ```{r}
-# 7. Verificar unique values para variables categóricas clave
-cat("\nValores únicos en entidad:\n")
-unique(base_final$entidad)
-
-cat("\nValores únicos en estrato:\n")
-unique(base_final$estrato)
+aire_limp <- aire |>
+  filter(if_all(c(municipio,tipo_de_fuente,so_2,co,n_ox,cov,pm_010,pm_2_5,nh_3,entidad), 
+                ~ !is.na(.)))
 ```
-
-```{r}
-# 8. Usar skimr para un análisis más detallado
-cat("\nAnálisis detallado con skimr:\n")
-skim(base_final)
-```
-```{r}
-# 9. Verificar la unión con calidad del aire
-cat("\nNúmero de registros con datos de contaminantes:\n")
-sum(!is.na(base_final$PM_2_5))
-```
-
-```{r}
-# 10. Ver correlación entre variables numéricas (opcional)
-cat("\nMatriz de correlación (solo variables numéricas):\n")
-numeric_data <- base_final %>% select(where(is.numeric))
-cor_matrix <- cor(numeric_data, use = "complete.obs")
-print(round(cor_matrix, 2))
-```
-
+ 
