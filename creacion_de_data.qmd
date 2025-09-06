@@ -1,0 +1,184 @@
+---
+title: "creacion_de_data"
+format: html
+editor: source
+---
+
+
+```{r}
+library(readr)
+library(dplyr)
+library(readr)
+library(skimr)
+library(janitor)
+library(tidyr)
+library(tidyverse)
+```
+
+```{r}
+salud = read_delim("data/ensanut2022_muestras.csv", delim = ";")
+demo = read_delim("data/ensanut2022_socdem.csv", delim = ";")
+aire = read_delim("data/calidad_aire_2025.csv")
+```
+
+```{r}
+glimpse(aire)
+```
+
+```{r}
+table(aire$Entidad)
+```
+```{r}
+table(salud$entidad)
+```
+
+# Procesamiento de datos
+
+Cambiamos el nombre de la variable h0302 y h0303 por "sexo" y "edad"
+
+```{r}
+names(salud)[match(c("h0302", "h0303"), names(salud))] = c("sexo", "edad")
+```
+Nos quedamos con las variables numéricas de biomarcadores, entidad, sexo y edad
+
+```{r}
+df_salud = salud |>
+        select(entidad,sexo, edad, hb02, estrato, contains("valor"))
+
+glimpse(df_salud)
+```
+
+#### Pre-procesamiento de df_salud
+
+Convertir los datos a numéricos 
+```{r}
+df_salud = df_salud |>
+        mutate(across(contains("valor"), ~ as.numeric(str_replace(., ",", "\\."))), 
+               entidad = as.integer(entidad))
+```
+
+```{r}
+head(df_salud)
+```
+
+Solo conservamos las variables que, según las entrevistas y especialistas, ayudaron a depurar:
+
+```{r}
+# Solo conservamos las variables que, según las entrevistas y especialistas, ayudaron a depurar
+vars_keep <- c("sexo", "edad", "entidad", "estrato", "valor_PCR", "valor_COLEST", 
+               "valor_COL_LDL", "valor_COL_HDL", "valor_TRIG", "valor_GLU_SUERO",
+               "valor_HBAC", "hb02", "valor_CREAT", "valor_HB1AC")
+
+df_salud <- df_salud |> 
+  select(any_of(vars_keep))
+
+head(df_salud)
+
+```
+
+
+#### Pre-procesamiento a aire
+
+```{r}
+df_aire = aire |>
+  select(-Municipio, -Entidad_federativa) |>   # borrar duplicados
+  mutate(
+    entidad = match(Entidad, unique(Entidad))  # asignar número 1–32
+  ) |>
+  select(-Entidad)  #quitar texto, quedarnos con número
+```
+
+```{r}
+head(df_aire)
+```
+
+
+#### Match de datasets
+
+Un dataframe con una fila por entidad, donde cada columna numérica contiene el promedio de los valores de esa entidad.
+
+Se hace este promedio para evitar duplicar filas: si se hiciera un join directo, cada observación de df_salud se emparejaría con todas las observaciones de df_aire que coincidan en la misma entidad, lo que puede generar un dataset inflado con muchas filas repetidas y valores faltantes. (Estas fueron, con un left_join(), alredededor de 40 mil; no obstante, con muchos valores nulos).
+
+Al promediar, cada entidad de df_aire se reduce a una sola fila con valores representativos, y luego se asigna ese promedio a todas las observaciones de df_salud que pertenezcan a esa entidad. De esta forma, se conserva el tamaño original de df_salud y se evitan problemas de duplicación o pérdida de datos por valores faltantes.
+
+```{r}
+df_aire_resumido <- df_aire |>
+  group_by(entidad) |>
+  summarise(across(where(is.numeric), \(x) mean(x, na.rm = TRUE)))  #promedio por entidad
+
+df_final <- df_salud |>
+  left_join(df_aire_resumido, by = "entidad")
+
+```
+
+```{r}
+glimpse(df_final)
+```
+
+##### Limpiar de nans
+
+```{r}
+df_final_clean = df_final |> drop_na()
+```
+
+```{r}
+head(df_final_clean)
+```
+
+```{r}
+glimpse(df_final_clean)
+```
+### Guardamos los datos para utilizar en el modelo
+
+```{r}
+write_csv(df_final_clean, "data/dataset.csv")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
