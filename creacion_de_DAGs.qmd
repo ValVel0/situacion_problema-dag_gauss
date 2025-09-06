@@ -282,5 +282,5 @@ dev.off()
 ### Guardamos como objeto
 
 ```{r}
-save(dag_3, file = "objetos/dag_2.RData")
+save(dag_3, file = "objetos/dag_3.RData")
 ```
