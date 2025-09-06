@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-# Primera DAG 
+# Primera DAG
 
 La primera DAG se construyó con una entrevista a la Dra. Mariana Sofía Flores Jiménez.
 
@@ -97,12 +97,12 @@ png("figures/diagrama_dag_1.png", width = 1200, height = 800, res = 150)
 graphviz.plot(dag_1, shape = "ellipse")
 dev.off()
 ```
+
 ### Guardamos como un objeto
 
 ```{r}
 save(dag_1, file = "objetos/dag_1.RData")
 ```
-
 
 # Segunda DAG
 
@@ -200,21 +200,87 @@ png("figures/diagrama_dag_2.png", width = 1200, height = 800, res = 150)
 graphviz.plot(dag_2, shape = "ellipse")
 dev.off()
 ```
+
 ### Guardamos como objeto
 
 ```{r}
 save(dag_2, file = "objetos/dag_2.RData")
 ```
 
-
-
 # Tercera DAG
 
+La tercera DAG se construyo con ayuda de la Dra. Beatriz Adriana Barragán Castillo por medio de una consulta sobre las emisiones y sus afectaciones en los biomarcadores.
 
+```{r}
+# Al igual que en la segunda DAG, la entidad no tiene ninguna relación.
+dag_3 = empty.graph(nodes = c("sexo", "edad", "entidad", 
+                                 "valor_PCR", "valor_COLEST", "valor_COL_LDL", "valor_COL_HDL", 
+                                 "valor_TRIG", "valor_GLU_SUERO", "valor_HBAC", "hb02", "valor_CREAT",
+                                 "SO2", "CO", "NOx", "PM_010", "PM_2_5", "COV", "NH3"))
 
+arc_set3 <- matrix(c(
+  #Demográficos con biomarcadores
+  "sexo", "hb02",
+  "sexo", "valor_PCR",
+  "sexo", "valor_COLEST",
+  "sexo", "valor_COL_LDL",
+  "sexo", "valor_COL_HDL",
+  "sexo", "valor_TRIG",
+  "sexo", "valor_GLU_SUERO",
+  "sexo", "valor_HBAC",
+  "sexo", "valor_CREAT",
+  "edad", "hb02",
+  "edad", "valor_PCR",
+  "sexo", "valor_COLEST",
+  "edad", "valor_COL_LDL",
+  "edad", "valor_COL_HDL",
+  "edad", "valor_TRIG",
+  "edad", "valor_GLU_SUERO",
+  "edad", "valor_HBAC",
+  "edad", "valor_CREAT",
+  #Emisiones + biomarcadores:
+  "NH3", "hb02",
+  "NH3", "valor_CREAT",
+  "NH3", "valor_PCR",
+  "NH3", "valor_COLEST",
+  "NH3", "valor_COL_LDL",
+  "NH3", "valor_COL_HDL",
+  "NH3", "valor_TRIG",
+  "CO", "hb02",
+  "SO2", "valor_PCR",
+  "SO2", "valor_CREAT",
+  "NOx", "valor_PCR",
+  "NOx", "valor_TRIG",
+  "NOx", "valor_COLEST",
+  "PM_010", "valor_PCR",
+  "PM_010", "valor_COLEST",
+  "PM_2_5", "valor_PCR",
+  "PM_2_5", "valor_COLEST",
+  "COV", "valor_PCR",
+  "COV", "valor_COLEST"
+), byrow = TRUE, ncol = 2,
+dimnames = list(NULL, c("from", "to")))
 
+# arcos de DAG
+arcs(dag_3) = arc_set3
 
+dag_3
+```
 
+```{r}
+dev.new(width=12, height=8)  
+graphviz.plot(dag_3, shape = "ellipse")
+```
 
+```{r}
+# guardamos la imagen
+png("figures/diagrama_dag_3.png", width = 1200, height = 800, res = 150)
+graphviz.plot(dag_3, shape = "ellipse")
+dev.off()
+```
 
+### Guardamos como objeto
 
+```{r}
+save(dag_3, file = "objetos/dag_3.RData")
+```
