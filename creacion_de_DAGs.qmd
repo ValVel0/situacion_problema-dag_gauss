@@ -14,7 +14,7 @@ library(bnlearn)
 ```
 
 ```{r}
-dag_salud1 = empty.graph(nodes = c("sexo", "edad", "entidad", 
+dag_1 = empty.graph(nodes = c("sexo", "edad", "entidad", 
                                  "valor_PCR", "valor_COLEST", "valor_COL_LDL", "valor_COL_HDL", 
                                  "valor_TRIG", "valor_GLU_SUERO", "valor_HBAC", "hb02", "valor_CREAT",
                                  "SO2", "CO", "NOx", "PM_010", "PM_2_5", "COV", "NH3"))
@@ -81,22 +81,28 @@ arc_set1 = matrix(c(
 dimnames = list(NULL, c("from", "to")))
 
 # arcos de DAG
-arcs(dag_salud1) = arc_set1
+arcs(dag_1) = arc_set1
 
-dag_salud1
+dag_1
 ```
 
 ```{r}
 dev.new(width=12, height=8)  
-graphviz.plot(dag_salud1, shape = "ellipse")
+graphviz.plot(dag_1, shape = "ellipse")
 ```
 
 ```{r}
 # guardamos la imagen
-png("figures/diagrama_dag_salud1.png", width = 1200, height = 800, res = 150)
-graphviz.plot(dag_salud1, shape = "ellipse")
+png("figures/diagrama_dag_1.png", width = 1200, height = 800, res = 150)
+graphviz.plot(dag_1, shape = "ellipse")
 dev.off()
 ```
+### Guardamos como un objeto
+
+```{r}
+save(dag_1, file = "objetos/dag_1.RData")
+```
+
 
 # Segunda DAG
 
@@ -105,7 +111,7 @@ La segunda DAG se contruyó con las respuestas de la entrevista al Rafael Albert
 ```{r}
 
 # en esta entrevista, la entidad federativa no tiene ninguna relación
-dag_salud2 = empty.graph(nodes = c("sexo", "edad", "entidad", 
+dag_2 = empty.graph(nodes = c("sexo", "edad", "entidad", 
                                  "valor_PCR", "valor_COLEST", "valor_COL_LDL", "valor_COL_HDL", 
                                  "valor_TRIG", "valor_GLU_SUERO", "valor_HBAC", "hb02", "valor_CREAT",
                                  "SO2", "CO", "NOx", "PM_010", "PM_2_5", "COV", "NH3"))
@@ -177,23 +183,29 @@ arc_set2 <- matrix(c(
 dimnames = list(NULL, c("from", "to")))
 
 # arcos de DAG
-arcs(dag_salud2) = arc_set2
+arcs(dag_2) = arc_set2
 
-dag_salud2
+dag_2
 
 ```
 
 ```{r}
 dev.new(width=12, height=8)  
-graphviz.plot(dag_salud2, shape = "ellipse")
+graphviz.plot(dag_2, shape = "ellipse")
 ```
 
 ```{r}
 # guardamos la imagen
-png("figures/diagrama_dag_salud2.png", width = 1200, height = 800, res = 150)
-graphviz.plot(dag_salud2, shape = "ellipse")
+png("figures/diagrama_dag_2.png", width = 1200, height = 800, res = 150)
+graphviz.plot(dag_2, shape = "ellipse")
 dev.off()
 ```
+### Guardamos como objeto
+
+```{r}
+save(dag_2, file = "objetos/dag_2.RData")
+```
+
 
 
 # Tercera DAG

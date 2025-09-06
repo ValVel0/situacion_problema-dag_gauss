@@ -29,6 +29,15 @@ library(tidyr)
 library(tidyverse)
 ```
 
+```{r}
+load("objetos/dag_1.RData")
+
+# Revisar la DAG
+dag_1
+graphviz.plot(dag_1, shape = "ellipse")
+```
+
+
 # Carga y limpia de Muestras
 
 ```{r}
