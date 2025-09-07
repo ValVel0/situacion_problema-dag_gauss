@@ -10,7 +10,11 @@ La primera DAG se construyó con una entrevista a la Dra. Mariana Sofía Flores 
 
 ```{r}
 library(tidyverse)
+library(mgcv)
+library(gratia)
+library(ggplot2)
 library(bnlearn)
+library(dplyr)
 ```
 
 ```{r}
@@ -442,7 +446,6 @@ strenght_df_final_dag1
 
 ```
 
-
 ```{r}
 
 strenght_df_knn3_dag1 = arc.strength(dag_1, data = df_knn3, criterion = 'cor')
@@ -506,6 +509,7 @@ score(dag_3, data = df_final, type = "bic-g")
 cat("Score de dag_3 con df_knn3:\n")
 score(dag_1, data = df_knn3, type = "bic-g")
 ```
+
 Basándonos en los scores proporcionados, donde un valor menos negativo indica un mejor ajuste del modelo a los datos:
 
 Para los datos originales (df_final): El dag_2 obtuvo el mejor score (-186319.3), seguido de dag_1 (-187889.7) y finalmente dag_3 (-188021.4). Esto sugiere que dag_2 representa mejor la estructura de los datos originales.
@@ -513,3 +517,95 @@ Para los datos originales (df_final): El dag_2 obtuvo el mejor score (-186319.3)
 Para los datos imputados (df_knn3): Todos los modelos obtuvieron el mismo score (-1216063), lo que indica que el proceso de imputación (knn3) homogenizó los datos, eliminando las diferencias entre las estructuras de los DAGs y haciendo que todos se ajusten por igual.
 
 En resumen, dag_2 es el modelo más adecuado para los datos originales, mientras que la imputación con knn3 elimina la capacidad de discriminar entre modelos.
+
+
+# Intento de MLE como javier
+
+```{r}
+mod_lm <- lm(valor_PCR ~ PM_2_5, data = df_final)
+summary(mod_lm)
+coef(mod_lm)
+```
+
+```{r}
+ggplot(df_final, aes(x = PM_2_5, y = valor_PCR)) +
+  geom_point(color = "steelblue", alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE, lwd = 2, color = "dodgerblue") +
+  labs(x = "PM2.5 (μg/m³)", y = "Proteína C Reactiva (mg/L)", 
+       title = "Relación lineal entre PM2.5 y PCR") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold", margin = margin(0, 0, 5, 0)),
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold", angle = 90))
+```
+
+```{r}
+mod_gam_PCR <- gam(valor_PCR ~ s(PM_2_5) + s(edad) + factor(sexo) + s(SO_2) + s(NOx), 
+                  data = df_final, method = "REML")
+summary(mod_gam_PCR)
+```
+```{r}
+draw(mod_gam_PCR, select = "s(PM_2_5)", residuals = TRUE, rug = FALSE) +
+  labs(x = "PM2.5 (μg/m³)", y = "s(PM2.5)", 
+       title = "Efecto parcial del PM2.5 sobre la PCR") +
+  theme_bw() +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold",
+                                  margin = margin(0, 0, 5, 0)),
+        axis.title.x = element_text(face = "bold"),
+        axis.title.y = element_text(face = "bold", angle = 90),
+        legend.title = element_text(hjust = 0.5, face = "bold"),
+        legend.text = element_text(hjust = 0.5),
+        strip.text = element_text(hjust = 0.5, face = "bold",
+                                  margin = margin(2, 3, 3, 3)),
+        plot.subtitle = element_text(hjust = 0.5, face = "bold",
+                                     size = 10,
+                                     margin = margin(0, 0, 5, 0)))
+
+```
+
+```{r}
+mod_multiple <- lm(valor_PCR ~ PM_2_5 + SO_2 + NOx + valor_TRIG + valor_GLU_SUERO, 
+                  data = df_final)
+summary(mod_multiple)
+```
+
+```{r}
+score(dag_2, data = df_final, type = "bic-g")
+```
+
+```{r}
+mod_gam_PCR_full <- gam(valor_PCR ~ s(PM_2_5) + s(SO_2) + s(NOx) + s(PM_010) + 
+                         s(COV) + s(NH_3) + s(edad) + factor(sexo),
+                       data = df_final, method = "REML")
+
+mod_gam_COLEST <- gam(valor_COLEST ~ s(SO_2) + s(CO) + s(COV) + s(NH_3) + 
+                       s(edad) + factor(sexo),
+                     data = df_final, method = "REML")
+
+mod_gam_TRIG <- gam(valor_TRIG ~ s(SO_2) + s(COV) + s(NH_3) + 
+                     s(edad) + factor(sexo),
+                   data = df_final, method = "REML")
+
+mod_gam_GLU <- gam(valor_GLU_SUERO ~ s(CO) + s(PM_010) + s(PM_2_5) + 
+                    s(COV) + s(NH_3) + s(edad) + factor(sexo),
+                  data = df_final, method = "REML")
+
+```
+
+```{r}
+mod_sexo <- lm(sexo ~ 1, data = df_final)
+mod_edad <- lm(edad ~ 1, data = df_final)
+mod_entidad <- lm(entidad ~ 1, data = df_final)
+```
+
+```{r}
+bic_total <- -1/2*(BIC(mod_gam_PCR_full) + BIC(mod_gam_COLEST) + 
+                    BIC(mod_gam_TRIG) + BIC(mod_gam_GLU) + 
+                    BIC(mod_sexo) + BIC(mod_edad) + BIC(mod_entidad))
+print(bic_total)
+```
+
+```{r}
+fit_dag2 <- bn.fit(dag_2, data = df_final)
+```
+
