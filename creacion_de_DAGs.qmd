@@ -520,7 +520,7 @@ Para los datos imputados (df_knn3): Igualmente, el dag_2 obtuvo el mejor score (
 
 En resumen, dag_2 es el modelo más adecuado dirigido tanto para los datos originales como para los datos imputados, lo que demuestra la robustez ante el proceso de imputación utilizando KNN y su consistencia y capacidad de modelar adecuadamente las relaciones de dependencia en los datos.
 
-# Ajuste de GBN y pruebas BIC AIC
+# Ajuste de GBN y pruebas BIC & AIC
 
 Por los resultados de la base de datos df_final y df_knn3, se selecciona la df_final que, aunque no tiene la extensión completa de las bases originales, mantiene la relación de los datos más intacta.
 
@@ -567,6 +567,17 @@ ggplot(df_final, aes(x = PM_2_5, y = valor_PCR)) +
         axis.title.x = element_text(face = "bold"),
         axis.title.y = element_text(face = "bold", angle = 90))
 ```
+```{r}
+#| eval: false
+ggsave("figures/lm_gbn.png", 
+       plot = last_plot(),  
+       width = 8, 
+       height = 6, 
+       dpi = 300,
+       bg = "white")
+
+```
+
 
 ```{r}
 mod_gam_PCR <- gam(valor_PCR ~ s(PM_2_5) + s(edad) + factor(sexo) + s(SO_2) + s(NOx), 
@@ -590,6 +601,16 @@ draw(mod_gam_PCR, select = "s(PM_2_5)", residuals = TRUE, rug = FALSE) +
         plot.subtitle = element_text(hjust = 0.5, face = "bold",
                                      size = 10,
                                      margin = margin(0, 0, 5, 0)))
+
+```
+```{r}
+#| eval: false
+ggsave("figures/gam_gbn.png", 
+       plot = last_plot(),  
+       width = 8, 
+       height = 6, 
+       dpi = 300,
+       bg = "white")
 
 ```
 
