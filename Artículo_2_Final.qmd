@@ -1,5 +1,5 @@
 ---
-title: "Artículo 1 - Redes Bayesianas multinomiales"
+title: "Artículo 2 - Redes Bayesianas multinomiales"
 author:
   - name: "Barush Caliel C. Luna"
     affiliation: "1"
@@ -12,7 +12,7 @@ author:
 affiliation:
   - id: "1"
     institution: "Instituto Tecnológico de Estudios Superiores de Monterrey"
-date: "08/31/2025"
+date: "09/31/2025"
 abstract: |
 
 keywords: []
@@ -122,21 +122,52 @@ queries.
 
 ## Modelo no paramétrico
 
-Para complementar el análisis lineal y la GBN, se ajustaron modelos aditivos generalizados (GAMs) multivariables (`gam`) para los biomarcadores de interés, incluyendo PCR, colesterol, triglicéridos y glucosa. Cada modelo incorporó efectos suaves por medio del método `s()` para las variables continuas, de modo que se capturaran las relaciones no lineales complejas entre los contaminantes, los datos demográficos y los biomarcadores. 
+Para complementar el análisis lineal y la GBN, se ajustaron modelos
+aditivos generalizados (GAMs) multivariables (`gam`) para los
+biomarcadores de interés, incluyendo PCR, colesterol, triglicéridos y
+glucosa. Cada modelo incorporó efectos suaves por medio del método `s()`
+para las variables continuas, de modo que se capturaran las relaciones
+no lineales complejas entre los contaminantes, los datos demográficos y
+los biomarcadores.
 
-Asimismo, se evaluó el desempeño de las GAMs mediante el cálculo del BIC total, sumando los modelos de los biomarcadores y variables demográficas, comparando con la de la DAG seleccionada. El fin de este procedimiento fue la modelación de la estructura de la GBN. 
+Asimismo, se evaluó el desempeño de las GAMs mediante el cálculo del BIC
+total, sumando los modelos de los biomarcadores y variables
+demográficas, comparando con la de la DAG seleccionada. El fin de este
+procedimiento fue la modelación de la estructura de la GBN.
 
 # Resultados (aplicación)
 
 ## Imágenes de DAGs
 
-## Resultados de BIC AIC de las GBNs
+##### DAG propuesta 1
+
+![DAG 1](figures/diagrama_dag_1.png)
+
+##### DAG propuesta 2
+
+![DAG 2](figures/diagrama_dag_2.png)
+
+##### DAG propuesta 3
+
+![DAG 3](figures/diagrama_dag_3.png)
+
+## Resultados de BIC & AIC de las GBNs
+
+| Modelo GBN | BIC        | AIC        |
+|------------|------------|------------|
+| DAG 1      | -187,889.7 | -187,661.8 |
+| DAG 2      | -186,319.3 | -186,085.8 |
+| DAG 3      | -188,021.4 | -187,813.3 |
 
 ## Modelos con variables categóricas
+
+![Modelo de regresión lineal (LM / MLE)](figures/lm_gbn.png)
 
 ## Resultados de las probabilidades
 
 ## Modelo no paramétrico
+
+![Modelo no paramétrico (Splines)](figures/gam_gbn.png)
 
 # Análisis de resultados
 
@@ -144,12 +175,11 @@ Asimismo, se evaluó el desempeño de las GAMs mediante el cálculo del BIC tota
 
 ## Análisis de modelos con variables categóricas
 
-## Análisi de probabilidades
+## Análisis de probabilidades
 
 ## Métricas del modelo no paramétrico
 
 # Conclusiones
-
 
 # Referencias
 
