@@ -284,3 +284,25 @@ dev.off()
 ```{r}
 save(dag_3, file = "objetos/dag_3.RData")
 ```
+
+# Cargar bases de datos
+
+```{r}
+df_final = read_delim("data/dataset.csv")
+```
+
+```{r}
+head(df_final)
+glimpse(df_final)
+```
+
+```{r}
+df_knn3 = read_delim("data/k3_dataset.csv")
+```
+
+
+```{r}
+head(df_knn3)
+glimpse(df_knn3)
+```
+
