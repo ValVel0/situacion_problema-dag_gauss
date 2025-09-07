@@ -309,7 +309,7 @@ glimpse(df_knn3)
 
 ## Comparacion de DAGS
 
-#ver si hay una diferencia de variables entre las dags y las bases de datos 
+#ver si hay una diferencia de variables entre las dags y las bases de datos
 
 ```{r}
 # creacion de conteo de vraibles
@@ -430,12 +430,36 @@ cat(paste(extra_in_data, collapse = " "), "\n")
 
 ```
 
-# ver fuerza de los dags 
+# ver fuerza de los dags
 
+## arc_strenght de las dags
 
+```{r}
+strenght_dag1 = arc.strength(dag_1, data = df_final, method = 'mi')
+strenght_dag1 
+```
 
-`
-# score de los dags 
+```{r}
+strenght_dag2 = arc.strength(dag_2, data = df_final, method = 'mi')
+strenght_dag2 
+```
 
+```{r}
+strenght_dag3 = arc.strength(dag_3, data = df_final, method = 'mi')
+strenght_dag3 
+```
 
+##Scores
+
+```{r}
+score(dag_1, data = df_final, type = "bic-g")
+```
+
+```{r}
+score(dag_2, data = df_final, type = "bic-g")
+```
+
+```{r}
+score(dag_3, data = df_final, type = "bic-g")
+```
 
