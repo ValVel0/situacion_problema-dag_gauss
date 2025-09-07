@@ -506,4 +506,10 @@ score(dag_3, data = df_final, type = "bic-g")
 cat("Score de dag_3 con df_knn3:\n")
 score(dag_1, data = df_knn3, type = "bic-g")
 ```
+Basándonos en los scores proporcionados, donde un valor menos negativo indica un mejor ajuste del modelo a los datos:
 
+Para los datos originales (df_final): El dag_2 obtuvo el mejor score (-186319.3), seguido de dag_1 (-187889.7) y finalmente dag_3 (-188021.4). Esto sugiere que dag_2 representa mejor la estructura de los datos originales.
+
+Para los datos imputados (df_knn3): Todos los modelos obtuvieron el mismo score (-1216063), lo que indica que el proceso de imputación (knn3) homogenizó los datos, eliminando las diferencias entre las estructuras de los DAGs y haciendo que todos se ajusten por igual.
+
+En resumen, dag_2 es el modelo más adecuado para los datos originales, mientras que la imputación con knn3 elimina la capacidad de discriminar entre modelos.
