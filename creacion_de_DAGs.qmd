@@ -289,7 +289,9 @@ dev.off()
 save(dag_3, file = "objetos/dag_3.RData")
 ```
 
-# Cargar bases de datos
+# Aplicación de las DAGs
+
+## Cargar bases de datos
 
 ```{r}
 df_final = read_delim("data/dataset.csv")
@@ -313,7 +315,7 @@ glimpse(df_knn3)
 
 ## Comparacion de DAGS
 
-#ver si hay una diferencia de variables entre las dags y las bases de datos
+### Ver si hay una diferencia de variables entre las dags y las bases de datos
 
 ```{r}
 # creacion de conteo de vraibles
@@ -434,7 +436,7 @@ cat(paste(extra_in_data, collapse = " "), "\n")
 
 ```
 
-# ver fuerza de los dags
+# Ver fuerza de los dags
 
 ## arc_strenght de las dags
 
@@ -484,7 +486,7 @@ strenght_df_knn3_dag3
 
 ```
 
-##Scores
+## Scores
 
 ```{r}
 cat("Score de dag_1 con df_final:\n")
@@ -518,8 +520,35 @@ Para los datos imputados (df_knn3): Todos los modelos obtuvieron el mismo score 
 
 En resumen, dag_2 es el modelo más adecuado para los datos originales, mientras que la imputación con knn3 elimina la capacidad de discriminar entre modelos.
 
+# Ajuste de GBN y pruebas BIC AIC 
 
-# Intento de MLE como javier
+Por los resultados de la base de datos df_final y df_knn3, se selecciona la df_final que, aunque no tiene la extensión completa de las bases originales, mantiene la relación de los datos más intacta.
+
+Se ajustan las 3 GBNs:
+
+```{r}
+gbn_dag1 = bn.fit(dag_1, data = df_final)
+gbn_dag2 = bn.fit(dag_2, data = df_final)
+gbn_dag3 = bn.fit(dag_3, data = df_final)
+```
+
+Aplicamos una prueba BIC y AIC a las GBNs
+
+```{r}
+score(dag_1, df_final, type = "bic-g")
+score(dag_2, df_final, type = "bic-g")
+score(dag_3, df_final, type = "bic-g")
+```
+
+```{r}
+score(dag_1, df_final, type = "aic-g")
+score(dag_2, df_final, type = "aic-g")
+score(dag_3, df_final, type = "aic-g")
+```
+
+Para ambos resultados de BIC y AIC, la segunda dag es la que mantiene el valor más alto (menos negativo) con un $\text{BIC} = -186319.3$ y un $\text{AIC} = -186085.8$, mientras las otras DAGs: DAG 1 con $\text{BIC} = -187889.7$ y un $\text{AIC} = -187661.8$ y DAG 3 con $\text{BIC} = -188021.4$ y un $\text{AIC} = -187813.3$. Por ello, seleccionamos la DAG 2 con mejor BIC.
+
+# Análisis exploratorio con modelos lineales
 
 ```{r}
 mod_lm <- lm(valor_PCR ~ PM_2_5, data = df_final)
@@ -544,6 +573,7 @@ mod_gam_PCR <- gam(valor_PCR ~ s(PM_2_5) + s(edad) + factor(sexo) + s(SO_2) + s(
                   data = df_final, method = "REML")
 summary(mod_gam_PCR)
 ```
+
 ```{r}
 draw(mod_gam_PCR, select = "s(PM_2_5)", residuals = TRUE, rug = FALSE) +
   labs(x = "PM2.5 (μg/m³)", y = "s(PM2.5)", 
@@ -568,10 +598,13 @@ mod_multiple <- lm(valor_PCR ~ PM_2_5 + SO_2 + NOx + valor_TRIG + valor_GLU_SUER
                   data = df_final)
 summary(mod_multiple)
 ```
+Revisamos el BIC del modelo con la DAG 2.
 
 ```{r}
 score(dag_2, data = df_final, type = "bic-g")
 ```
+
+# Modelo no paramétrico
 
 ```{r}
 mod_gam_PCR_full <- gam(valor_PCR ~ s(PM_2_5) + s(SO_2) + s(NOx) + s(PM_010) + 
@@ -592,6 +625,8 @@ mod_gam_GLU <- gam(valor_GLU_SUERO ~ s(CO) + s(PM_010) + s(PM_2_5) +
 
 ```
 
+# Inclusión de la variable sexo al modelo
+
 ```{r}
 mod_sexo <- lm(sexo ~ 1, data = df_final)
 mod_edad <- lm(edad ~ 1, data = df_final)
@@ -608,4 +643,5 @@ print(bic_total)
 ```{r}
 fit_dag2 <- bn.fit(dag_2, data = df_final)
 ```
+
 
