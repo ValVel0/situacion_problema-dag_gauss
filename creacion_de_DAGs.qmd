@@ -435,31 +435,75 @@ cat(paste(extra_in_data, collapse = " "), "\n")
 ## arc_strenght de las dags
 
 ```{r}
-strenght_dag1 = arc.strength(dag_1, data = df_final, method = 'mi')
-strenght_dag1 
+
+strenght_df_final_dag1 = arc.strength(dag_1, data = df_final, criterion = 'cor')
+cat("Strenght de dag_1 con df_final:\n")
+strenght_df_final_dag1
+
+```
+
+
+```{r}
+
+strenght_df_knn3_dag1 = arc.strength(dag_1, data = df_knn3, criterion = 'cor')
+cat("Strenght de dag_1 con df_knn3:\n")
+strenght_df_knn3_dag1
+
 ```
 
 ```{r}
-strenght_dag2 = arc.strength(dag_2, data = df_final, method = 'mi')
-strenght_dag2 
+strenght_df_final_dag2 = arc.strength(dag_2, data = df_final, criterion = 'cor')
+cat("Strenght de dag_2 con df_final:\n")
+strenght_df_final_dag2
+
 ```
 
 ```{r}
-strenght_dag3 = arc.strength(dag_3, data = df_final, method = 'mi')
-strenght_dag3 
+
+strenght_df_knn3_dag2 = arc.strength(dag_2, data = df_knn3, criterion = 'cor')
+cat("Strenght de dag_2 con df_knn3:\n")
+strenght_df_knn3_dag2
+
+```
+
+```{r}
+
+strenght_df_final_dag3 = arc.strength(dag_3, data = df_final, criterion = 'cor')
+cat("Strenght de dag_3 con df_final:\n")
+strenght_df_final_dag3
+```
+
+```{r}
+
+strenght_df_knn3_dag3 = arc.strength(dag_3, data = df_knn3, criterion = 'cor')
+cat("Strenght de dag_3 con df_final:\n")
+strenght_df_knn3_dag3
+
 ```
 
 ##Scores
 
 ```{r}
+cat("Score de dag_1 con df_final:\n")
 score(dag_1, data = df_final, type = "bic-g")
+
+cat("Score de dag_1 con df_knn3:\n")
+score(dag_1, data = df_knn3, type = "bic-g")
 ```
 
 ```{r}
+cat("Score de dag_2 con df_final:\n")
 score(dag_2, data = df_final, type = "bic-g")
+
+cat("Score de dag_2 con df_knn3:\n")
+score(dag_1, data = df_knn3, type = "bic-g")
 ```
 
 ```{r}
+cat("Score de dag_3 con df_final:\n")
 score(dag_3, data = df_final, type = "bic-g")
+
+cat("Score de dag_3 con df_knn3:\n")
+score(dag_1, data = df_knn3, type = "bic-g")
 ```
 
