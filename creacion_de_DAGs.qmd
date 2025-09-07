@@ -520,7 +520,7 @@ Para los datos imputados (df_knn3): Todos los modelos obtuvieron el mismo score 
 
 En resumen, dag_2 es el modelo más adecuado para los datos originales, mientras que la imputación con knn3 elimina la capacidad de discriminar entre modelos.
 
-# Ajuste de GBN y pruebas BIC AIC 
+# Ajuste de GBN y pruebas BIC AIC
 
 Por los resultados de la base de datos df_final y df_knn3, se selecciona la df_final que, aunque no tiene la extensión completa de las bases originales, mantiene la relación de los datos más intacta.
 
@@ -598,6 +598,7 @@ mod_multiple <- lm(valor_PCR ~ PM_2_5 + SO_2 + NOx + valor_TRIG + valor_GLU_SUER
                   data = df_final)
 summary(mod_multiple)
 ```
+
 Revisamos el BIC del modelo con la DAG 2.
 
 ```{r}
@@ -644,4 +645,45 @@ print(bic_total)
 fit_dag2 <- bn.fit(dag_2, data = df_final)
 ```
 
+# Queries
 
+## Query 1
+
+La primer query, después de reestructurarla, es: ¿Cuál es la probabilidad de que un individuo tenga valores altos de Proteína C Reactiva (valor_PCR, marcador de inflamación) dado que sus niveles de exposición a $\text{PM}_{2.5}$ y $\text{NO}_x$ son altos?
+
+Para conocer los valores que represtan como *alto* en la proteína C reactiva y en las partículas, se investigó en la página de la National Center for Biotechnology Information (NCBI). Según Singh, et al (2025) los niveles de proteína C reactiva son:
+
+-   Evalación moderada: Valores entre $1.0$ y $10.0 mg/dL$.
+-   Evación significativa: valores superiores a $10.0 mg/dL$.
+-   Elevación severa: valores superiores a $50.0 mg/dL$.
+
+Se tomará la elevación severa como _alta_ bajo este contexto de consulta.
+
+Respecto a los gases, según la WHO (2021), los valores de $\text{PM}_{2.5}$ que pueden provocar daños respiratorios o se consideran niveles altos alrededor de $50 \mu g/m^3$. Para los óxidos de nitrógeno, según Jarvis, et al (2010), para los niveles alrededor de $3160 \mu g/m^3$ o $2 \text{ ppm}$ existen efectos bioquímicos significativos en la salud; por ello, se considerarán como _altos_.
+
+
+```{r}
+cpquery(
+  gbn_dag2,
+  event = (valor_PCR >= 50),
+  evidence = list(
+    PM_2_5 = 50,   
+    NOx   = 3160   
+  ),
+  method = "lw"
+)
+```
+
+La probabilidad fue de 0\%, por tanto, es posible que no haya tanta presentación de los datos para esos valores, de modo que puede ser un evento poco probable, pero no improbable.  
+
+## Query 2
+
+La segunda query, después de reestructurarla, es: ¿Qué tan probable es que una persona tenga creatinina alta (lo que puede indicar problemas en los riñones) si además tiene un mal control de azúcar en la sangre (HbA1c elevado) y vive en un ambiente con mucho $\text{PM}_{2.5}$ en elaire?
+
+Referencias:
+
+Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone, nitrogen dioxide, sulfur dioxide and carbon monoxide. https://www.who.int/publications/i/item/9789240034228
+
+Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein: Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf. https://www.ncbi.nlm.nih.gov/books/NBK441843/
+
+Jarvis, D. J., Adamkiewicz, G., Heroux, M., Rapp, R., & Kelly, F. J. (2010). Nitrogen dioxide. WHO Guidelines For Indoor Air Quality: Selected Pollutants - NCBI Bookshelf. https://www.ncbi.nlm.nih.gov/books/NBK138707/
