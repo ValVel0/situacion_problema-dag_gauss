@@ -501,7 +501,7 @@ cat("Score de dag_2 con df_final:\n")
 score(dag_2, data = df_final, type = "bic-g")
 
 cat("Score de dag_2 con df_knn3:\n")
-score(dag_1, data = df_knn3, type = "bic-g")
+score(dag_2, data = df_knn3, type = "bic-g")
 ```
 
 ```{r}
@@ -509,16 +509,16 @@ cat("Score de dag_3 con df_final:\n")
 score(dag_3, data = df_final, type = "bic-g")
 
 cat("Score de dag_3 con df_knn3:\n")
-score(dag_1, data = df_knn3, type = "bic-g")
+score(dag_3, data = df_knn3, type = "bic-g")
 ```
 
 Basándonos en los scores proporcionados, donde un valor menos negativo indica un mejor ajuste del modelo a los datos:
 
 Para los datos originales (df_final): El dag_2 obtuvo el mejor score (-186319.3), seguido de dag_1 (-187889.7) y finalmente dag_3 (-188021.4). Esto sugiere que dag_2 representa mejor la estructura de los datos originales.
 
-Para los datos imputados (df_knn3): Todos los modelos obtuvieron el mismo score (-1216063), lo que indica que el proceso de imputación (knn3) homogenizó los datos, eliminando las diferencias entre las estructuras de los DAGs y haciendo que todos se ajusten por igual.
+Para los datos imputados (df_knn3): Igualmente, el dag_2 obtuvo el mejor score (-1212470), seguido de dag_1 (-1216063) y por último dag_3 (-1216480) lo que indica que dag_2 mantiene su superioridad estructural incluso después de la imputación con KNN.
 
-En resumen, dag_2 es el modelo más adecuado para los datos originales, mientras que la imputación con knn3 elimina la capacidad de discriminar entre modelos.
+En resumen, dag_2 es el modelo más adecuado dirigido tanto para los datos originales como para los datos imputados, lo que demuestra la robustez ante el proceso de imputación utilizando KNN y su consistencia y capacidad de modelar adecuadamente las relaciones de dependencia en los datos.
 
 # Ajuste de GBN y pruebas BIC AIC
 
@@ -657,10 +657,9 @@ Para conocer los valores que represtan como *alto* en la proteína C reactiva y 
 -   Evación significativa: valores superiores a $10.0 mg/dL$.
 -   Elevación severa: valores superiores a $50.0 mg/dL$.
 
-Se tomará la elevación severa como _alta_ bajo este contexto de consulta.
+Se tomará la elevación severa como *alta* bajo este contexto de consulta.
 
-Respecto a los gases, según la WHO (2021), los valores de $\text{PM}_{2.5}$ que pueden provocar daños respiratorios o se consideran niveles altos alrededor de $50 \mu g/m^3$. Para los óxidos de nitrógeno, según Jarvis, et al (2010), para los niveles alrededor de $3160 \mu g/m^3$ o $2 \text{ ppm}$ existen efectos bioquímicos significativos en la salud; por ello, se considerarán como _altos_.
-
+Respecto a los gases, según la WHO (2021), los valores de $\text{PM}_{2.5}$ que pueden provocar daños respiratorios o se consideran niveles altos alrededor de $50 \mu g/m^3$. Para los óxidos de nitrógeno, según Jarvis, et al (2010), para los niveles alrededor de $3160 \mu g/m^3$ o $2 \text{ ppm}$ existen efectos bioquímicos significativos en la salud; por ello, se considerarán como *altos*.
 
 ```{r}
 cpquery(
@@ -674,7 +673,7 @@ cpquery(
 )
 ```
 
-La probabilidad fue de 0\%, por tanto, es posible que no haya tanta presentación de los datos para esos valores, de modo que puede ser un evento poco probable, pero no improbable.  
+La probabilidad fue de 0%, por tanto, es posible que no haya tanta presentación de los datos para esos valores, de modo que puede ser un evento poco probable, pero no improbable.
 
 ## Query 2
 
