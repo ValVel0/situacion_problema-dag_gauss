@@ -39,22 +39,130 @@ editor:
     wrap: 72
 ---
 
+# Introducción
+
+# Metodología
+
+Las herramientas utilizadas en este reporte constaron de Rstudio como el
+entorno de programación junto con el lenguaje R, donde se efectuó la
+mayoría de ejecución del proyecto; Excel como la base de datos; y GitHub
+para el control de versiones y el trabajo colaborativo.
+
+## Entrevistas y estructuración de DAGs
+
+La conexión con profesores y especialistas en los temas de salud fue
+fundamental, pues permitió conocer una faceta diferente del enfoque del
+objetivo del proyecto y saber específicamente cómo se comportan las
+variables del medioambiente con los biomarcadores.
+
+En concreto, se entrevistaron a tres especialistas por medio de una
+encuesta de 19 preguntas, la cual estaba diseñada para responder con
+*sí*, *no*, o dar detalles si era muy compleja la pregunta. Esta
+encuesta se pensó de manera que se descartara o confirmara relaciones de
+dependencia entre las variables de biomarcadores, demográficas y del
+medioambiente; mismas preguntas fueron separadas en secciones. (La
+encuesta se encuentra en el repositorio, así como las respuestas).
+
+Concretamente, las personas entrevistadas fueron: la Dra. Mariana Sofía
+Flores Jiménez, profesora e investigadora del Instituto Tecnológico de
+Estudios Superiores de Monterrey (ITESM) ligada al área de salud y
+biomédica; al profesor Rafael Alberto Pérez San Lázaro así como
+estudiante de doctorado ligado al área de salud del ITESM; y...
+
+## Construcción de base de datos
+
+Una vez que se tuvo la información sobre las variables, así como
+propuestas de DAGs, se enlistaron las variables para el proyecto. Bajo
+el supuesto de que la información de la encuestas (SEMARNAT 2025 y
+ENSANUT 2022) se puede relacionar y hay representación de los
+contaminantes sobre los biomarcadores, se construyó el base de datos. El
+análisis se buscó realizarse por entidad federativa, por tanto, la
+variable que representaba el Estado en ambos base de datoss fue el medio
+de unión.
+
+Como primer paso, se renombraron las variables que coincidian en la base
+de datos, así como cambiar el tipo de dato de *chr* a numérico
+reemplazando las comas por puntos decimales. Se conservó únicamente el
+conjunto de variables consideradas relevantes tras las entrevistas y
+recomendaciones de especialistas, incluyendo los biomarcadores como PCR,
+colesterol, triglicéridos y hemoglobina glicosilada, además de
+información demográfica como edad, sexo y la entidad federativa.
+Asimismo, para las variables de entidad federativa, se reemplazaron los
+nombres tipo *str* por valores *int*, de modo que su unión fuera más
+dinámica.
+
+Para cada observación en la base de datos de ENSANUT se promedió una
+observación de SEMARNAT y se le asignó por cada coincidencia que había
+por entidad federativa. Esto se hizo con el objetivo de vincular los
+datos de salud con las exposiciones ambientales de manera
+representativa, evitando la duplicación de filas. Y por último, se
+eliminaron las variables con valores faltantes.
+
+## Construcción de GBNs
+
+Se construyeron tres redes bayesianas gausianas (GBN) basadas en las
+DAGs propuestas por los especialistas. La calidad del ajuste de cada DAG
+se evaluó mediante los criterios BIC y AIC, donde valores menos
+negativos indican un mejor ajuste.
+
+## Queries
+
+Posterior a la entrevista de las 19 preguntas, se pidió a los
+especialistas que dieran una propuesta de query basada en la información
+presentada. Esta última fue guardada y reacomodada de modo que pudiera
+ser interpretada matemáticamente, y por ello, compatible con el lenguaje
+de programación R.
+
+Sumado a ello, al ser las queries técnicas, se tuvo que investigar
+términos como qué representa que un biomarcador sea *alto*, *bajo* o
+*estable*. Para dicha tarea se utilizaron citios web de confianza como
+la National Center for Biotechnology Information (NCBI) para obtener los
+rangos específicos e interpretar correctamente lo que se requería en las
+queries.
+
+## Modelo no paramétrico
+
+Para complementar el análisis lineal y la GBN, se ajustaron modelos aditivos generalizados (GAMs) multivariables (`gam`) para los biomarcadores de interés, incluyendo PCR, colesterol, triglicéridos y glucosa. Cada modelo incorporó efectos suaves por medio del método `s()` para las variables continuas, de modo que se capturaran las relaciones no lineales complejas entre los contaminantes, los datos demográficos y los biomarcadores. 
+
+Asimismo, se evaluó el desempeño de las GAMs mediante el cálculo del BIC total, sumando los modelos de los biomarcadores y variables demográficas, comparando con la de la DAG seleccionada. El fin de este procedimiento fue la modelación de la estructura de la GBN. 
+
+# Resultados (aplicación)
+
+## Imágenes de DAGs
+
+## Resultados de BIC AIC de las GBNs
+
+## Modelos con variables categóricas
+
+## Resultados de las probabilidades
+
+## Modelo no paramétrico
+
+# Análisis de resultados
+
+## Análisis de DAGs, BIC y AIC
+
+## Análisis de modelos con variables categóricas
+
+## Análisi de probabilidades
+
+## Métricas del modelo no paramétrico
+
+# Conclusiones
 
 
+# Referencias
 
+Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global
+air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone,
+nitrogen dioxide, sulfur dioxide and carbon monoxide.
+https://www.who.int/publications/i/item/9789240034228
 
+Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein:
+Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf.
+https://www.ncbi.nlm.nih.gov/books/NBK441843/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Jarvis, D. J., Adamkiewicz, G., Heroux, M., Rapp, R., & Kelly, F. J.
+(2010). Nitrogen dioxide. WHO Guidelines For Indoor Air Quality:
+Selected Pollutants - NCBI Bookshelf.
+https://www.ncbi.nlm.nih.gov/books/NBK138707/
