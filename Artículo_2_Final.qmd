@@ -1,0 +1,40 @@
+---
+title: "Artículo 1 - Redes Bayesianas multinomiales"
+author:
+  - name: "Barush Caliel C. Luna"
+    affiliation: "1"
+  - name: "Diego B. Castillo"
+    affiliation: "1"
+  - name: "Pedro Emilio S. Rodríguez"
+    affiliation: "1"
+  - name: "Vidal Alejandro G. López"
+    affiliation: "1"
+affiliation:
+  - id: "1"
+    institution: "Instituto Tecnológico de Estudios Superiores de Monterrey"
+date: "08/31/2025"
+abstract: |
+
+keywords: []
+
+format:
+  html:
+    toc: true
+    number-sections: true
+    code-fold: true
+    theme: lumen
+  pdf:
+    documentclass: article
+    toc: true
+    number-sections: true
+    latex-engine: xelatex
+    #classoption: twocolumn #esto es para las dos columnas
+    keep-tex: false
+execute:
+  echo: true
+  warning: false
+  error: false
+editor: 
+  markdown: 
+    wrap: 72
+---
