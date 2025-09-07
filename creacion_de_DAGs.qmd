@@ -300,9 +300,140 @@ glimpse(df_final)
 df_knn3 = read_delim("data/k3_dataset.csv")
 ```
 
-
 ```{r}
 head(df_knn3)
 glimpse(df_knn3)
 ```
+
+## Comparacion de DAGS
+
+#ver si hay una diferencia de variables entre las dags y las bases de datos 
+
+```{r}
+# creacion de conteo de vraibles
+
+# dags
+
+dag1_vars <- nodes(dag_1)
+
+dag2_vars <- nodes(dag_2)
+
+dag3_vars <- nodes(dag_3)
+
+# dataframes
+
+df_final_vars <- names(df_final)
+df_knn3_vars <- names(df_knn3)
+
+```
+
+```{r}
+# comparacion de variables 
+
+# DAG 1
+
+# df_final comparacion
+
+cat("Compracion Dag 1 con df_final:\n")
+
+# Variables en el DAG pero no en los datos
+missing_in_data <- setdiff(dag1_vars, df_final_vars)
+cat("Variables en el DAG_1 pero no en df_final:\n")
+cat(paste(missing_in_data, collapse = " "), "\n\n")
+
+
+# Variables en los datos pero no en el DAG
+extra_in_data <- setdiff(df_final_vars, dag1_vars)
+cat("Variables en df_final pero no en el DAG_1:\n")
+cat(paste(extra_in_data, collapse = " "), "\n\n")
+
+# df_knn3 comparacion 
+
+cat("Compracion Dag 1 con df_knn3:\n")
+
+# Variables en el DAG pero no en los datos
+missing_in_data <- setdiff(dag1_vars, df_knn3_vars)
+cat("Variables en el DAG_1 pero no en df_knn3:\n")
+cat(paste(missing_in_data, collapse = " "), "\n\n")
+
+
+# Variables en los datos pero no en el DAG
+extra_in_data <- setdiff(df_knn3_vars, dag1_vars)
+cat("Variables en df_knn3 pero no en el DAG_1:\n")
+cat(paste(extra_in_data, collapse = " "), "\n\n")
+
+# DAG 2
+
+# df_final comparacion
+
+cat("Compracion Dag 2 con df_final:\n")
+
+# Variables en el DAG pero no en los datos
+missing_in_data <- setdiff(dag2_vars, df_final_vars)
+cat("Variables en el DAG_2 pero no en df_final:\n")
+cat(paste(missing_in_data, collapse = " "), "\n\n")
+
+
+# Variables en los datos pero no en el DAG
+extra_in_data <- setdiff(df_final_vars, dag2_vars)
+cat("Variables en df_final pero no en el DAG_2:\n")
+cat(paste(extra_in_data, collapse = " "), "\n\n")
+
+# df_knn3 comparacion 
+
+cat("Compracion Dag 2 con df_knn3:\n")
+
+# Variables en el DAG pero no en los datos
+missing_in_data <- setdiff(dag2_vars, df_knn3_vars)
+cat("Variables en el DAG_2 pero no en df_knn3:\n")
+cat(paste(missing_in_data, collapse = " "), "\n\n")
+
+
+# Variables en los datos pero no en el DAG
+extra_in_data <- setdiff(df_knn3_vars, dag2_vars)
+cat("Variables en df_knn3 pero no en el DAG_2:\n")
+cat(paste(extra_in_data, collapse = " "), "\n\n")
+
+# DAG 3
+
+# df_final comparacion
+
+cat("Compracion Dag 3 con df_final:\n")
+
+# Variables en el DAG pero no en los datos
+missing_in_data <- setdiff(dag3_vars, df_final_vars)
+cat("Variables en el DAG_3 pero no en df_final:\n")
+cat(paste(missing_in_data, collapse = " "), "\n\n")
+
+
+# Variables en los datos pero no en el DAG
+extra_in_data <- setdiff(df_final_vars, dag3_vars)
+cat("Variables en df_final pero no en el DAG_3:\n")
+cat(paste(extra_in_data, collapse = " "), "\n\n")
+
+# df_knn3 comparacion 
+
+cat("Compracion Dag 3 con df_knn3:\n")
+
+# Variables en el DAG pero no en los datos
+missing_in_data <- setdiff(dag3_vars, df_knn3_vars)
+cat("Variables en el DAG_3 pero no en df_knn3:\n")
+cat(paste(missing_in_data, collapse = " "), "\n\n")
+
+
+# Variables en los datos pero no en el DAG
+extra_in_data <- setdiff(df_knn3_vars, dag3_vars)
+cat("Variables en df_knn3 pero no en el DAG_3:\n")
+cat(paste(extra_in_data, collapse = " "), "\n")
+
+```
+
+# ver fuerza de los dags 
+
+
+
+`
+# score de los dags 
+
+
 
