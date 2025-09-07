@@ -37,13 +37,13 @@ table(salud$entidad)
 Cambiamos el nombre de la variable h0302 y h0303 por "sexo" y "edad"
 
 ```{r}
-names(salud)[match(c("h0302", "h0303"), names(salud))] = c("sexo", "edad")
+names(salud)[match(c("h0302", "h0303", "hb02"), names(salud))] = c("sexo", "edad", "valor_HB")
 ```
 Nos quedamos con las variables numéricas de biomarcadores, entidad, sexo y edad
 
 ```{r}
 df_salud = salud |>
-        select(entidad,sexo, edad, hb02, estrato, contains("valor"))
+        select(entidad,sexo, edad, estrato, contains("valor"))
 
 glimpse(df_salud)
 ```
@@ -65,9 +65,9 @@ Solo conservamos las variables que, según las entrevistas y especialistas, ayud
 
 ```{r}
 # Solo conservamos las variables que, según las entrevistas y especialistas, ayudaron a depurar
-vars_keep <- c("sexo", "edad", "entidad", "estrato", "valor_PCR", "valor_COLEST", 
+vars_keep <- c("sexo", "edad", "entidad", "estrato", "valor_HB", "valor_PCR", "valor_COLEST", 
                "valor_COL_LDL", "valor_COL_HDL", "valor_TRIG", "valor_GLU_SUERO",
-               "valor_HBAC", "hb02", "valor_CREAT", "valor_HB1AC")
+               "valor_HBAC", "valor_CREAT", "valor_HB1AC")
 
 df_salud <- df_salud |> 
   select(any_of(vars_keep))
@@ -114,8 +114,26 @@ df_final <- df_salud |>
 ```{r}
 glimpse(df_final)
 ```
+#### Checar si existen celdas con solo espacios
 
-##### Limpiar de nans
+```{r}
+cols_character <- sapply(df_final, is.character)
+cols_texto <- names(df_final)[cols_character]
+
+for(col in cols_texto) {
+  solo_espacios <- sum(grepl("^\\s+$", df_final[[col]]), na.rm = TRUE)
+  if(solo_espacios > 0) {
+    print(paste("Columna", col, "tiene", solo_espacios, "celdas con solo espacios"))
+  }
+}
+```
+
+
+```{r}
+glimpse(df_final)
+```
+
+#### Limpiar de nans
 
 ```{r}
 df_final_clean = df_final |> drop_na()
@@ -128,17 +146,123 @@ head(df_final_clean)
 ```{r}
 glimpse(df_final_clean)
 ```
-### Guardamos los datos para utilizar en el modelo
+
+#### Guardamos los datos para utilizar en el modelo
 
 ```{r}
 write_csv(df_final_clean, "data/dataset.csv")
 ```
 
+```{r}
+#| eval: false
+install.packages("VIM")
+install.packages("dplyr")
+```
 
+```{r}
+library(VIM)
+library(dplyr)
+```
 
+### Utilizando KNN (k=3) para imputación
 
+#### Estadísticas base de datos originales para columnas numéricas
 
+```{r}
+cols_numericas <- sapply(df_final, is.numeric)
+df_orig_num <- df_final[, cols_numericas]
 
+stats_orig_media <- sapply(df_orig_num, mean, na.rm = TRUE)
+stats_orig_mediana <- sapply(df_orig_num, median, na.rm = TRUE)
+stats_orig_min <- sapply(df_orig_num, min, na.rm = TRUE)
+stats_orig_max <- sapply(df_orig_num, max, na.rm = TRUE)
+stats_orig_sd <- sapply(df_orig_num, sd, na.rm = TRUE)
+```
+
+#### Imputación KNN (k = 3)
+
+```{r}
+df_knn_k3 <- VIM::kNN(df_final, k = 3, imp_var = FALSE)
+```
+
+#### Estadísticas después de imputación (k = 3)
+
+```{r}
+df_knn3_num <- df_knn_k3[, cols_numericas]
+stats_k3_media <- sapply(df_knn3_num, mean, na.rm = TRUE)
+stats_k3_mediana <- sapply(df_knn3_num, median, na.rm = TRUE)
+stats_k3_min <- sapply(df_knn3_num, min, na.rm = TRUE)
+stats_k3_max <- sapply(df_knn3_num, max, na.rm = TRUE)
+stats_k3_sd <- sapply(df_knn3_num, sd, na.rm = TRUE)
+
+```
+
+#### Calcular diferencias
+
+```{r}
+diff_media_k3 <- abs((stats_k3_media - stats_orig_media) / stats_orig_media) * 100
+diff_sd_k3 <- abs((stats_k3_sd - stats_orig_sd) / stats_orig_sd) * 100
+diff_min_k3 <- abs((stats_k3_min - stats_orig_min) / stats_orig_min) * 100
+diff_max_k3 <- abs((stats_k3_max - stats_orig_max) / stats_orig_max) * 100
+
+sesgo_promedio_k3 <- mean(c(mean(diff_media_k3, na.rm = TRUE), 
+                           mean(diff_sd_k3, na.rm = TRUE),
+                           mean(diff_min_k3, na.rm = TRUE),
+                           mean(diff_max_k3, na.rm = TRUE)), na.rm = TRUE)
+
+print(paste("Sesgo promedio k=3:", round(sesgo_promedio_k3, 3), "%"))
+print("Diferencias en media (%):")
+print(round(diff_media_k3, 3))
+```
+
+```{r}
+glimpse(df_knn_k3)
+```
+
+### Imputación con KNN (k=5) para imputación
+
+```{r}
+df_knn_k5 <- VIM::kNN(df_final, k = 5, imp_var = FALSE)
+```
+
+```{r}
+df_knn5_num <- df_knn_k5[, cols_numericas]
+stats_k5_media <- sapply(df_knn5_num, mean, na.rm = TRUE)
+stats_k5_mediana <- sapply(df_knn5_num, median, na.rm = TRUE)
+stats_k5_min <- sapply(df_knn5_num, min, na.rm = TRUE)
+stats_k5_max <- sapply(df_knn5_num, max, na.rm = TRUE)
+stats_k5_sd <- sapply(df_knn5_num, sd, na.rm = TRUE)
+
+```
+
+```{r}
+diff_media_k5 <- abs((stats_k5_media - stats_orig_media) / stats_orig_media) * 100
+diff_sd_k5 <- abs((stats_k5_sd - stats_orig_sd) / stats_orig_sd) * 100
+diff_min_k5 <- abs((stats_k5_min - stats_orig_min) / stats_orig_min) * 100
+diff_max_k5 <- abs((stats_k5_max - stats_orig_max) / stats_orig_max) * 100
+
+sesgo_promedio_k5 <- mean(c(mean(diff_media_k5, na.rm = TRUE), 
+                           mean(diff_sd_k5, na.rm = TRUE),
+                           mean(diff_min_k5, na.rm = TRUE),
+                           mean(diff_max_k5, na.rm = TRUE)), na.rm = TRUE)
+
+print(paste("Sesgo promedio k=5:", round(sesgo_promedio_k5, 3), "%"))
+print("Diferencias en media (%):")
+print(round(diff_media_k5, 3))
+```
+```{r}
+nas_por_columna <- colSums(is.na(df_knn_k3))
+print("NAs por columna:")
+print(nas_por_columna)
+```
+
+```{r}
+glimpse(df_knn_k5)
+```
+
+```{r}
+write_csv(df_knn_k3, "data/k3_dataset.csv")
+```
 
 
 
