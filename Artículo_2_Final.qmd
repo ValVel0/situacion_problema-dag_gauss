@@ -384,13 +384,19 @@ fundamentadas.
 # Referencias
 
 Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global
-air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone,
+air quality guidelines: particulate matter (PM2.5 and PM10), ozone,
 nitrogen dioxide, sulfur dioxide and carbon monoxide.
 https://www.who.int/publications/i/item/9789240034228
 
+<<<<<<< HEAD
 Instituto Nacional de Salud Pública. (2022). *Encuesta Nacional de Salud
 y Nutrición (ENSANUT) 2022: Base de datos de muestras de sangre*
 \[Conjunto de datos\]. https://ensanut.insp.mx/
+=======
+Creatinine test - Mayo Clinic. (s.f.). https://www.mayoclinic.org/tests-procedures/creatinine-test/about/pac-20384646
+
+Instituto Nacional de Salud Pública. (2022). *Encuesta Nacional de Salud y Nutrición (ENSANUT) 2022: Base de datos de muestras de sangre* [Conjunto de datos]. https://ensanut.insp.mx/
+>>>>>>> 98353520f5b209573346fe6c6f7b82af2a89af1f
 
 Instituto Nacional de Salud Pública. (2022). *Encuesta Nacional de Salud
 y Nutrición (ENSANUT) 2022: Base de datos sociodemográficos* \[Conjunto
@@ -401,10 +407,16 @@ Jarvis, D. J., Adamkiewicz, G., Heroux, M., Rapp, R., & Kelly, F. J.
 Selected Pollutants - NCBI Bookshelf.
 https://www.ncbi.nlm.nih.gov/books/NBK138707/
 
+<<<<<<< HEAD
 Secretaría de Medio Ambiente y Recursos Naturales (SEMARNAT). (2025).
 *Base de datos de calidad del aire: Contaminantes atmosféricos por
 entidad federativa* \[Conjunto de datos\].
 https://historico.datos.gob.mx/busca/dataset/indicadores-basicos-del-desempeno-ambiental--atmosfera--calidad-del-aire
+=======
+NGSP: Clinical use. (s.f.). https://ngsp.org/ADA.asp
+
+Secretaría de Medio Ambiente y Recursos Naturales (SEMARNAT). (2025). *Base de datos de calidad del aire: Contaminantes atmosféricos por entidad federativa* [Conjunto de datos]. https://historico.datos.gob.mx/busca/dataset/indicadores-basicos-del-desempeno-ambiental--atmosfera--calidad-del-aire
+>>>>>>> 98353520f5b209573346fe6c6f7b82af2a89af1f
 
 Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein:
 Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf.
