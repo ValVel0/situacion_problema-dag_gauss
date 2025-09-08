@@ -242,8 +242,6 @@ En conjunto, este trabajo construye un primer acercamiento metodológico para el
 
 # Referencias
 
-# Referencias
-
 Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global
 air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone,
 nitrogen dioxide, sulfur dioxide and carbon monoxide.
