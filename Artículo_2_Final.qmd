@@ -1,5 +1,5 @@
-  ---
-title: "Artículo 2 - Redes Bayesianas multinomiales"
+---
+title: "Artículo 2 - Redes Bayesianas gaussianas"
 author:
   - name: "Barush Caliel C. Luna"
     affiliation: "1"
@@ -12,11 +12,10 @@ author:
 affiliation:
   - id: "1"
     institution: "Instituto Tecnológico de Estudios Superiores de Monterrey"
-date: "09/31/2025"
-abstract: This study employs Gaussian Bayesian networks (GBNs) to analyze the complex relationships between air pollution, socio-demographic factors, and health biomarkers in Mexico. Using data from the National Health and Nutrition Survey (ENSANUT) 2022 and air quality data from SEMARNAT, we integrated domain expertise from medical and environmental specialists to propose multiple network structures. Our methodology involved data fusion, variable selection, and model optimization using Bayesian Information Criterion (BIC) and Akaike Information Criterion (AIC). The best-performing GBN incorporated sex as a categorical variable and revealed significant dependencies between pollutants like PM₂.₅ and PM₁₀ and health outcomes such as inflammatory markers. Our findings highlight the utility of GBNs in environmental health research and provide insights for targeted public health interventions.
-
+date: "09/07/2025"
+abstract: |
+  This study employs Gaussian Bayesian networks (GBNs) to analyze the complex relationships between air pollution, socio-demographic factors, and health biomarkers in Mexico. Using data from the National Health and Nutrition Survey (ENSANUT) 2022 and air quality data from SEMARNAT, we integrated domain expertise from medical and environmental specialists to propose multiple network structures. Our methodology involved data fusion, variable selection, and model optimization using Bayesian Information Criterion (BIC) and Akaike Information Criterion (AIC). The best-performing GBN incorporated sex as a categorical variable and revealed significant dependencies between pollutants like PM₂.₅ and PM₁₀ and health outcomes such as inflammatory markers. Our findings highlight the utility of GBNs in environmental health research and provide insights for targeted public health interventions.
 keywords: [Gaussian Bayesian networks, air pollution, health biomarkers, ENSANUT, Mexico, environmental health.]
-
 format:
   html:
     toc: true
@@ -222,6 +221,27 @@ Nuevamente, la probabilidad condicional estimada fue $0$%, sugiriendo que la com
 
 # Conclusiones
 
+Este estudio mostró que las redes bayesianas gaussianas sirven como una herramienta útil para modelar las interacciones entre factores de contaminación ambiental, factores sociodemográficos y biomarcadores de salud en la población mexicana. Los resultados dados confirman que la colaboración con especialistas médicos y estudios ambientales es crucial para construir modelos probabilísticos que, además de optimizar métricas estadísticas, mantengan coherencia científica e interpretabilidad clínica.
+
+
+Este estudio mostró que las redes bayesianas gaussianas son una herramienta útil para modelar las interacciones entre contaminación ambiental, factores sociodemográficos y biomarcadores de salud en la población mexicana. Los resultados confirman que la colaboración con especialistas médicos y ambientales es clave para construir modelos probabilísticos que, además de optimizar métricas estadísticas, mantengan coherencia científica e interpretabilidad clínica.
+
+El análisis comparativo de las tres grafos acíclicos propuestos reveló que el **DAG 2** obtuvo el mejor desempeño, con valores de $BIC = -186{,}319.3$ y $AIC = -186{,}058.8$, superando a las alternativas. La incorporación de variables categóricas como *sexo* mejoró la capacidad predictiva del modelo, haciendo relevante incluir factores demográficos dentro del análisis de exposición ambiental y salud pública. Asimismo, la aplicación de modelos no paramétricos (GAMs) permitió observar relaciones no lineales que complementaron el enfoque flexible bayesiano.
+
+No obstante, el proyecto tuvo dificultades en la integración de bases de datos. La unión entre ENSANUT 2022 y SEMARNAT 2025 solo pudo hacerse a través de la variable *entidad federativa*, lo que redujo el nivel de detalle del análisis y pudo generar sesgos al promediar contaminantes por estado, perdiendo así variabilidad importante dentro de cada entidad.
+
+Otro reto fue la definición de relaciones de dependencia entre variables. Con la participación de expertos, fue posible establecer conexiones con sentido entre contaminantes específicos y biomarcadores. Sin embargo, formular preguntas lo suficientemente específicas para los especialistas sin inducir sesgos requirió tiempo de planeación de la encuesta aplicada, que constó de $19$ preguntas.
+
+Los resultados de las consultas probabilísticas mostraron probabilidades muy bajas ($0\%$) para escenarios de exposición severa. Esto puede interpretarse de dos maneras: por un lado, que estas condiciones son poco frecuentes en los datos analizados; por otro, que el modelo aún requiere refinamiento para capturar eventos extremos de exposición. A esta dificultad se suma el hecho de que una gran parte de los registros presentaba valores faltantes en distintos biomarcadores, además de que muchos estaban en formato de caracteres, por lo que fue necesario aplicar técnicas de conversión de *strings* a valores numéricos para que pudieran emplearse en el análisis de DAGs. Asimismo, se encontraron numerosas celdas vacías o con espacios, lo que obligó a generar dos bases de datos distintas.
+
+La primera base conservó únicamente los registros completos en todos los biomarcadores, lo que redujo el tamaño a cerca de $2{,}000$ filas. La segunda base aplicó imputación con KNN (k = 3) para rellenar los datos faltantes, alcanzando aproximadamente $13{,}000$ registros y con un sesgo cercano al $5\%$, lo cual se consideró bajo y consistente con lo esperado en una base diversa. No obstante, se decidió trabajar principalmente con la primera base, ya que aquella cuenta los datos completos y sin imputación. De esta manera, se evita el riesgo de introducir dependencias derivadas de información que no provenía directamente de la encuesta de salud original.
+
+En este contexto, las consultas produjeron resultados limitados. Era difícil esperar altos niveles de dependencia entre bases de datos que solo pudieron vincularse a través de una variable común (*entidad federativa*). Además, los contaminantes en el aire son factores complejos de reflejar en los biomarcadores considerados, pues intervienen múltiples elementos “invisibles” ó que al menos no se encontraban dentro de los datos que varían de manera importante entre individuos. A ello se añade la restricción del número de registros disponibles (solo alrededor de $2{,}000$ en la base limpia), lo cual redujo considerablemente la robustez de las consultas probabilísticas que pudieron realizarse.
+
+En conjunto, este trabajo construye un primer acercamiento metodológico para el análisis probabilístico de factores ambientales y de salud pública en México. Aunque presenta limitaciones, este sienta las bases para investigaciones más amplias que, con mejoras en la calidad y cobertura de los datos, podrían llegar a ofrecer recursos para el diseño de políticas de prevención y estrategias de salud ambiental mejor fundamentadas.
+
+# Referencias
+
 # Referencias
 
 Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global
@@ -229,11 +249,17 @@ air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone,
 nitrogen dioxide, sulfur dioxide and carbon monoxide.
 https://www.who.int/publications/i/item/9789240034228
 
-Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein:
-Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf.
-https://www.ncbi.nlm.nih.gov/books/NBK441843/
+Instituto Nacional de Salud Pública. (2022). *Encuesta Nacional de Salud y Nutrición (ENSANUT) 2022: Base de datos de muestras de sangre* [Conjunto de datos]. https://ensanut.insp.mx/
+
+Instituto Nacional de Salud Pública. (2022). *Encuesta Nacional de Salud y Nutrición (ENSANUT) 2022: Base de datos sociodemográficos* [Conjunto de datos]. https://ensanut.insp.mx/
 
 Jarvis, D. J., Adamkiewicz, G., Heroux, M., Rapp, R., & Kelly, F. J.
 (2010). Nitrogen dioxide. WHO Guidelines For Indoor Air Quality:
 Selected Pollutants - NCBI Bookshelf.
 https://www.ncbi.nlm.nih.gov/books/NBK138707/
+
+Secretaría de Medio Ambiente y Recursos Naturales (SEMARNAT). (2025). *Base de datos de calidad del aire: Contaminantes atmosféricos por entidad federativa* [Conjunto de datos]. https://historico.datos.gob.mx/busca/dataset/indicadores-basicos-del-desempeno-ambiental--atmosfera--calidad-del-aire
+
+Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein:
+Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf.
+https://www.ncbi.nlm.nih.gov/books/NBK441843/
