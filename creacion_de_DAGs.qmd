@@ -720,13 +720,13 @@ La tercera query es: ¿Checar si los contaminantes aéreos que afectan vías res
 
 # query
 cpquery(
-  fit_dag2,
-  event = (valor_PCR >= 50),
+  gbn_dag2,
+  event = (valor_PCR >= 50 & valor_HB1AC >= 6.5 & valor_TRIG >= 150),
   evidence = list(
-    COV > 0.5,
-    NH3 > 10,
-    NOx > 40,
-    PM_2_5 > 12
+    COV = 0.5,
+    NH_3 = 10,
+    NOx = 40,
+    PM_2_5 = 12
   ),
   method = "lw"
 )
