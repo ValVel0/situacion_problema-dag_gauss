@@ -205,9 +205,9 @@ La porbabilidad resulto ser $0$%, lo que sugiere que en el conjunto de datos est
 
 ### Query 2
 
-Se analizó la probabilidad de que un individuo tenga niveles elevados de creatinina (indicativo de posible daño renal), dadas condiciones de mal control glucémico ($HbA1c$ alto) y la presencia de contaminación con altos niveles de ${PM}_{2.5}$ en el ambiente.
+Se evaluó la probabilidad de que un individuo presente niveles elevados de creatinina sérica (>1.2 mg/dL, indicativo de posible daño renal), condicionado a un valor específico de hemoglobina glicosilada (HbA1c = 6.5%) y una concentración específica de material particulado fino (PM₂.₅ = 12 μg/m³).
 
-Este análisis ayuda a explorar la asociación potencial entre contaminación ambiental, alteraciones metabólicas y daño orgánico.
+La probabilidad condicional estimada fue de 8.11%, lo que sugiere una asociación moderada entre estas condiciones específicas y la creatinina elevada. Este análisis ayuda a explorar la relación entre la contaminación ambiental, el control glucémico y la función renal.
 
 ### Query 3
 
