@@ -71,7 +71,7 @@ Concretamente, las personas entrevistadas fueron: la Dra. Mariana Sofía
 Flores Jiménez, profesora e investigadora del Instituto Tecnológico de
 Estudios Superiores de Monterrey (ITESM) ligada al área de salud y
 biomédica; al profesor Rafael Alberto Pérez San Lázaro así como
-estudiante de doctorado ligado al área de salud del ITESM; y...
+estudiante de doctorado ligado al área de salud del ITESM; y la Dra. Adriana Barragán Castillo, médica urgencióloga del ISSTE. 
 
 ## Construcción de base de datos
 
@@ -205,9 +205,9 @@ La porbabilidad resulto ser $0$%, lo que sugiere que en el conjunto de datos est
 
 ### Query 2
 
-Se analizó la probabilidad de que un individuo tenga niveles elevados de creatinina (indicativo de posible daño renal), dadas condiciones de mal control glucémico ($HbA1c$ alto) y la presencia de contaminación con altos niveles de ${PM}_{2.5}$ en el ambiente.
+Se evaluó la probabilidad de que un individuo presente niveles elevados de creatinina sérica (>1.2 mg/dL, indicativo de posible daño renal), condicionado a un valor específico de hemoglobina glicosilada (HbA1c = 6.5%) y una concentración específica de material particulado fino (PM₂.₅ = 12 μg/m³).
 
-la probabilidad del evento aumentó a $0.178$. Esto indica que, bajo condiciones de mal control glucémico (HbA1c elevado) y exposición a altos niveles de $\text{PM}_{2.5}$, existe una probabilidad moderadamente mayor de encontrar niveles elevados de creatinina. Esta hipótesis podría ser comprobada con más datos, refiriéndose a que los factores metabólicos y ambientales pueden interactuar en el riesgo de daño renal.
+La probabilidad condicional estimada fue de 8.11%, lo que sugiere una asociación moderada entre estas condiciones específicas y la creatinina elevada. Este análisis ayuda a explorar la relación entre la contaminación ambiental, el control glucémico y la función renal.
 
 ### Query 3
 
