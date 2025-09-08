@@ -698,7 +698,40 @@ La probabilidad fue de 0%, por tanto, es posible que no haya tanta presentación
 
 ## Query 2
 
-La segunda query, después de reestructurarla, es: ¿Qué tan probable es que una persona tenga creatinina alta (lo que puede indicar problemas en los riñones) si además tiene un mal control de azúcar en la sangre (HbA1c elevado) y vive en un ambiente con mucho $\text{PM}_{2.5}$ en elaire?
+La segunda query, después de reestructurarla, es: ¿Qué tan probable es que una persona tenga creatinina alta (lo que puede indicar problemas en los riñones) si además tiene un mal control de azúcar en la sangre (HbA1c elevado) y vive en un ambiente con mucho $\text{PM}_{2.5}$ en el aire?
+
+## Query 3
+
+La tercera query es: ¿Checar si los contaminantes aéreos que afectan vías respiratorias también se pueden asociar en cambios a los biomarcadores metabólicos e inflamatorios?
+
+
+```{r}
+
+# Definir el evento:
+# valor_PCR mayor a 3 mg/L (inflamación alta)
+# valor_HBAC mayor a 6.5 % (posible diabetes)
+# valor_TRIG mayor a 150 mg/dL (triglicéridos altos)
+
+# Definir la evidencia:
+# COV > 0.5 ppm (ejemplo umbral)
+# NH3 > 10 ppb (ejemplo umbral)
+# NOx > 40 ppb (ejemplo umbral)
+# PM_2_5 > 12 µg/m³ (ejemplo umbral)
+
+# query
+cpquery(
+  fit_dag2,
+  event = (valor_PCR >= 50),
+  evidence = list(
+    COV > 0.5,
+    NH3 > 10,
+    NOx > 40,
+    PM_2_5 > 12
+  ),
+  method = "lw"
+)
+```
+
 
 Referencias:
 
