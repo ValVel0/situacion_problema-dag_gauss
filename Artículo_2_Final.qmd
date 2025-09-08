@@ -46,7 +46,6 @@ La contaminación ambiental y el cambio climático constituyen una crisis global
 Las redes bayesianas gaussianas (GBN) emergen como una herramienta prometedora para modelar estas interacciones, permitiendo no solo la descripción de dependencias probabilísticas, sino también la inferencia predictiva y la simulación de escenarios bajo diferentes condiciones de exposición. Este estudio se centra en implementar un modelo probabilístico que capture cómo los factores ambientales influyen en la salud de la población mexicana, con el objetivo de generar evidencia para políticas públicas y estrategias de prevención.
 
 Utilizamos datos de la Encuesta Nacional de Salud y Nutrición (ENSANUT) 2022, que incluye información sobre biomarcadores y variables socio demográficas, junto con datos de calidad del aire de la SEMARNAT (2025), asumiendo que estos últimos son representativos de las condiciones en 2022. Mediante la colaboración con especialistas en medicina y química, propusimos varias estructuras de redes bayesianas y evaluamos su desempeño mediante criterios de información. Además, exploramos la inclusión de variables categóricas como el sexo y aplicamos modelos no paramétricos para mejorar el ajuste del modelo.
-
 # Metodología
 
 Las herramientas utilizadas en este reporte constaron de Rstudio como el
