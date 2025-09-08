@@ -1,4 +1,4 @@
----
+  ---
 title: "Artículo 2 - Redes Bayesianas multinomiales"
 author:
   - name: "Barush Caliel C. Luna"
@@ -169,13 +169,49 @@ procedimiento fue la modelación de la estructura de la GBN.
 
 ![Modelo no paramétrico (Splines)](figures/gam_gbn.png)
 
-# Análisis de resultados
+# Análisis de resultados 
 
 ## Análisis de DAGs, BIC y AIC
 
+Para evaluar la calidad y ajuste de los diferentes modelos de Redes Gaussinas-Bayesianas que se construyeron, se aplicaron dos criterios estadísticos que son el BIC-G y AIC-G, una versión adaptada a datos continuos, estos criterios proporcionan una medida comparativa para la selección de las variables.
+
+Los valores de BIC-G para los 3 modelos analizados (${dag}_{1}, {dag}_{2}, {dag}_{3}$) en el conjunto de datos usado fueron de $-187889.7, -186319.3, -188021.4$ respectivamente. De acuerdo a esta métrica, el modelo ${dag}_{2}$ presentó el valor menos negativo, indicando un mejor valance en comparación con los otros modelos. 
+
+De forma similar, el AIC-G arrojó valores de $-187661.8, -186058.8, -197813.3$ para los mismos modelos, reiterando que la ${dag}_{2}$ es la mejor opción para esta métrica.
+
+Estos resultados sugieren que la ${dag}_{2}$ es el modelo que logra una mejor representación del conjunto de datos. 
+
 ## Análisis de modelos con variables categóricas
 
+Dado que algunas variables originales del data set eran categóricas, (por ejemplo, sexo y entidad), estas fueron transformadas mediante funciones de codificación, como lo es $mutate$ dentro de R, para convertirlas en variables numéricas.
+
+Esta transformación facilita el cálculo de probabilidades condicionales en las DAGs y evita sesgos que puedan surgir del manejo indiscriminado de variables categóricas en el modelo.
+
+El proceso permitió integrar de forma homogénea todas las variables en los modelos bayesianos, contribuyendo a la interpretabilidad de los resultados.
+
 ## Análisis de probabilidades
+
+Se realizaron consultas clave para interpretar y validar las relaciones relevantes entre contaminación ambiental y biomarcadores de salud.
+
+### Query 1
+
+Se evaluó la probabilidad de que un individuo presente valores elevados de Proteína C Reactiva, (mayores o iguales a $50$ $ mg/dL$, que indica una severa inflamación sistémica), condicionado a que sus niveles de exposivión a partículas ${PM}_{2.5}$ estén en $50$ $\mu g/m^3$ y óxidos de nitrógeno ($NOx$) en $3160$ $\mu g/m^3$, umbrales ya predefinidos. 
+
+La porbabilidad resulto ser $0$%, lo que sugiere que en el conjunto de datos esta condición es muy poco frecuente o que existe poca evidencia empírica para estos valores extremos, aunque no se descarta su presencia en otros contextos.
+
+### Query 2
+
+Se analizó la probabilidad de que un individuo tenga niveles elevados de creatinina (indicativo de posible daño renal), dadas condiciones de mal control glucémico ($HbA1c$ alto) y la presencia de contaminación con altos niveles de ${PM}_{2.5}$ en el ambiente.
+
+Este análisis ayuda a explorar la asociación potencial entre contaminación ambiental, alteraciones metabólicas y daño orgánico.
+
+### Query 3
+
+Se evaluó si los contaminantes aéreos que afectan vías respiratorias también se pueden asociar en cambios a los biomarcadores metabólicos e inflamatorios.
+
+Dichos biomarcadores son: Proteína C Reactiva $\geq$ $50$ $mg/dL$, hemoglobina glicosilada ($HbA1c$) $\geq$ $6.5$% y triglicéridos $\geq$ $150$ $mg/dL$. Condicionado a la presencia de contaminantes atmosféricos elevados pero más moderados que en la query 1: $COV < 0.5 ppm$, $NH_3 > 10 ppb$, $NOx > 40 ppb$ y ${PM}_{2.5} > 12 \mu g/m^3$
+
+Nuevamente, la probabilidad condicional estimada fue $0$%, sugiriendo que la combinación simultánea de estos valores elevados en biomarcadores e indicadores contaminantes no se observa en el conjunto de datos o es extremadamente rara.
 
 ## Métricas del modelo no paramétrico
 
