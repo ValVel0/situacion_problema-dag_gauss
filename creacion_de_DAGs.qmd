@@ -567,6 +567,7 @@ ggplot(df_final, aes(x = PM_2_5, y = valor_PCR)) +
         axis.title.x = element_text(face = "bold"),
         axis.title.y = element_text(face = "bold", angle = 90))
 ```
+
 ```{r}
 #| eval: false
 ggsave("figures/lm_gbn.png", 
@@ -577,7 +578,6 @@ ggsave("figures/lm_gbn.png",
        bg = "white")
 
 ```
-
 
 ```{r}
 mod_gam_PCR <- gam(valor_PCR ~ s(PM_2_5) + s(edad) + factor(sexo) + s(SO_2) + s(NOx), 
@@ -603,6 +603,7 @@ draw(mod_gam_PCR, select = "s(PM_2_5)", residuals = TRUE, rug = FALSE) +
                                      margin = margin(0, 0, 5, 0)))
 
 ```
+
 ```{r}
 #| eval: false
 ggsave("figures/gam_gbn.png", 
@@ -700,10 +701,29 @@ La probabilidad fue de 0%, por tanto, es posible que no haya tanta presentación
 
 La segunda query, después de reestructurarla, es: ¿Qué tan probable es que una persona tenga creatinina alta (lo que puede indicar problemas en los riñones) si además tiene un mal control de azúcar en la sangre (HbA1c elevado) y vive en un ambiente con mucho $\text{PM}_{2.5}$ en el aire?
 
+```{r}
+# Cargar la red bayesiana ajustada (si no está ya cargada)
+
+# Definir los umbrales:
+# - Creatinina alta: valor_CREAT > 1.2 mg/dL (umbral común para adultos)
+# - HbA1c elevado: valor_HBAC >= 6.5% (indicador de diabetes o mal control)
+# - Alto PM₂.₅: PM_2_5 > 12 μg/m³ (basado en estándares de calidad del aire)
+
+# Realizar la consulta de probabilidad condicional
+cpquery(
+    fit_dag2,
+    event = (valor_CREAT > 1.2),
+    evidence = list(valor_HB1AC = 6.5, PM_2_5 = 12),
+    method = "lw"
+)
+
+
+```
+
+
 ## Query 3
 
 La tercera query es: ¿Checar si los contaminantes aéreos que afectan vías respiratorias también se pueden asociar en cambios a los biomarcadores metabólicos e inflamatorios?
-
 
 ```{r}
 
