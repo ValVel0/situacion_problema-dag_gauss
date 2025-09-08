@@ -207,7 +207,7 @@ La porbabilidad resulto ser $0$%, lo que sugiere que en el conjunto de datos est
 
 Se analizó la probabilidad de que un individuo tenga niveles elevados de creatinina (indicativo de posible daño renal), dadas condiciones de mal control glucémico ($HbA1c$ alto) y la presencia de contaminación con altos niveles de ${PM}_{2.5}$ en el ambiente.
 
-Este análisis ayuda a explorar la asociación potencial entre contaminación ambiental, alteraciones metabólicas y daño orgánico.
+la probabilidad del evento aumentó a $0.178$. Esto indica que, bajo condiciones de mal control glucémico (HbA1c elevado) y exposición a altos niveles de $\text{PM}_{2.5}$, existe una probabilidad moderadamente mayor de encontrar niveles elevados de creatinina. Esta hipótesis podría ser comprobada con más datos, refiriéndose a que los factores metabólicos y ambientales pueden interactuar en el riesgo de daño renal.
 
 ### Query 3
 
@@ -243,9 +243,11 @@ En conjunto, este trabajo construye un primer acercamiento metodológico para el
 # Referencias
 
 Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global
-air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone,
+air quality guidelines: particulate matter (PM2.5 and PM10), ozone,
 nitrogen dioxide, sulfur dioxide and carbon monoxide.
 https://www.who.int/publications/i/item/9789240034228
+
+Creatinine test - Mayo Clinic. (s.f.). https://www.mayoclinic.org/tests-procedures/creatinine-test/about/pac-20384646
 
 Instituto Nacional de Salud Pública. (2022). *Encuesta Nacional de Salud y Nutrición (ENSANUT) 2022: Base de datos de muestras de sangre* [Conjunto de datos]. https://ensanut.insp.mx/
 
@@ -255,6 +257,8 @@ Jarvis, D. J., Adamkiewicz, G., Heroux, M., Rapp, R., & Kelly, F. J.
 (2010). Nitrogen dioxide. WHO Guidelines For Indoor Air Quality:
 Selected Pollutants - NCBI Bookshelf.
 https://www.ncbi.nlm.nih.gov/books/NBK138707/
+
+NGSP: Clinical use. (s.f.). https://ngsp.org/ADA.asp
 
 Secretaría de Medio Ambiente y Recursos Naturales (SEMARNAT). (2025). *Base de datos de calidad del aire: Contaminantes atmosféricos por entidad federativa* [Conjunto de datos]. https://historico.datos.gob.mx/busca/dataset/indicadores-basicos-del-desempeno-ambiental--atmosfera--calidad-del-aire
 

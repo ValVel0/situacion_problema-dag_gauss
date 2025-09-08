@@ -700,6 +700,28 @@ La probabilidad fue de 0%, por tanto, es posible que no haya tanta presentación
 
 La segunda query, después de reestructurarla, es: ¿Qué tan probable es que una persona tenga creatinina alta (lo que puede indicar problemas en los riñones) si además tiene un mal control de azúcar en la sangre (HbA1c elevado) y vive en un ambiente con mucho $\text{PM}_{2.5}$ en el aire?
 
+Creatinina sérica (indicador de función renal)
+Según Mayo Clinic (s.f.):
+*   0.74–1.35   mg/dL en hombres
+*   0.59–1.04 mg/dL en mujeres
+
+HbA1c (control glucémico)
+La American Diabetes Association (ADA) define:
+*   ≥ 6.5 % como diagnóstico de diabetes.
+*   ≥ 7 % refleja mal control glucémico crónico.
+
+```{r}
+cpquery(
+  gbn_dag2,
+  event = (valor_CREAT >= 1.2),
+  evidence = list(
+    valor_HB = 7,
+    PM_2_5 = 50
+  ),
+  method = "lw"
+)
+```
+
 ## Query 3
 
 La tercera query es: ¿Checar si los contaminantes aéreos que afectan vías respiratorias también se pueden asociar en cambios a los biomarcadores metabólicos e inflamatorios?
@@ -738,6 +760,14 @@ Referencias:
 
 Air Quality, Energy and Health (AQE). (2021, 22 septiembre). WHO global air quality guidelines: particulate matter (‎PM2.5 and PM10)‎, ozone, nitrogen dioxide, sulfur dioxide and carbon monoxide. https://www.who.int/publications/i/item/9789240034228
 
-Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein: Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf. https://www.ncbi.nlm.nih.gov/books/NBK441843/
+Creatinine test - Mayo Clinic. (s.f.). https://www.mayoclinic.org/tests-procedures/creatinine-test/about/pac-20384646
 
 Jarvis, D. J., Adamkiewicz, G., Heroux, M., Rapp, R., & Kelly, F. J. (2010). Nitrogen dioxide. WHO Guidelines For Indoor Air Quality: Selected Pollutants - NCBI Bookshelf. https://www.ncbi.nlm.nih.gov/books/NBK138707/
+
+NGSP: Clinical use. (s.f.). https://ngsp.org/ADA.asp
+
+Singh, B., Goyal, A., & Patel, B. C. (2025, 3 mayo). C-Reactive Protein: Clinical Relevance and Interpretation. StatPearls - NCBI Bookshelf. https://www.ncbi.nlm.nih.gov/books/NBK441843/
+
+
+
+
