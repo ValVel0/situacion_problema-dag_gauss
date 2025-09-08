@@ -732,6 +732,7 @@ cpquery(
 )
 ```
 
+La probabilidad fue de 0%, por tanto, es posible que no haya datos que coincidan para esos valores, de modo que puede ser un evento muy poco porbable.
 
 Referencias:
 
